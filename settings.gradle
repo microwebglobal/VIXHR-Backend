@@ -1,0 +1,11 @@
+rootProject.name = 'vixhr'
+
+include 'api-gateway'
+include 'auth-service'
+include 'employee-service'
+include 'attendance-service'
+include 'payroll-service'
+include 'notification-service'
+include 'reporting-service'
+include 'common'
+include 'discovery-service'
