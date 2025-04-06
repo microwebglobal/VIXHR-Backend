@@ -11,6 +11,8 @@ build/
 .project
 .classpath
 .settings/
+bin/
+bin/
 
 # Logs
 logs/
