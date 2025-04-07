@@ -29,3 +29,7 @@ eureka:
     hostname: localhost
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
     lease-renewal-interval-in-seconds: 30
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

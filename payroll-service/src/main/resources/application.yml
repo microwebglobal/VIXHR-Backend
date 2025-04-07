@@ -5,9 +5,9 @@ spring:
   application:
     name: payroll-service
   datasource:
-    url: jdbc:postgresql://localhost:5433/vixhr_payroll
-    username: ${DB_USERNAME:vixhruser}
-    password: ${DB_PASSWORD:vixhrpassword}
+    url: jdbc:postgresql://localhost:5432/vixhr_payroll
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:password}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -29,3 +29,7 @@ eureka:
     hostname: localhost
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
     lease-renewal-interval-in-seconds: 30
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
