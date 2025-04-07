@@ -2,14 +2,14 @@ package com.microwebglobal.vixhr.employee.service;
 
 import com.microwebglobal.vixhr.employee.model.Employee;
 import com.microwebglobal.vixhr.employee.repository.EmployeeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class EmployeeService {
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
 
     public Employee createEmployee(Employee employee) {
         return employeeRepository.save(employee);
@@ -26,5 +26,20 @@ public class EmployeeService {
             throw new RuntimeException("Employee not found for user ID: " + userId);
         }
         return employee;
+    }
+
+    public Employee updateEmployee(Long id, Employee employee) {
+        employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found for ID: " + employee.getId()));
+
+        employee.setId(id);
+        return employeeRepository.save(employee);
+    }
+
+    public void deleteEmployee(Long id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found for ID: " + id));
+
+        employeeRepository.delete(employee);
     }
 }
