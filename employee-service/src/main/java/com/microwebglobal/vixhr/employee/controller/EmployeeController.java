@@ -2,6 +2,7 @@ package com.microwebglobal.vixhr.employee.controller;
 
 import com.microwebglobal.vixhr.employee.model.Employee;
 import com.microwebglobal.vixhr.employee.service.EmployeeService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/employees")
+@SecurityRequirement(name = "oauth")
 public class EmployeeController {
 
     private final EmployeeService employeeService;

@@ -1,5 +1,6 @@
 server:
   port: 8082
+  forward-headers-strategy: framework
 
 spring:
   application:
@@ -17,6 +18,11 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   kafka:
     bootstrap-servers: localhost:9092
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
 
 eureka:
   client:
@@ -33,3 +39,8 @@ eureka:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+    oauth:
+      client-id: test-client
+      client-secret: secret
+  oAuthFlow:
+    tokenUrl: http://localhost:8081/oauth2/token

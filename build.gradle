@@ -76,7 +76,6 @@ project(':discovery-service') {
     dependencies {
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
         implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
-
     }
 }
 
@@ -86,10 +85,6 @@ project(':auth-service') {
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
         implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
-//        implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-//        runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-//        runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-//        implementation 'org.springframework.boot:spring-boot-starter-security'
         runtimeOnly 'org.postgresql:postgresql'
         implementation("org.flywaydb:flyway-database-postgresql")
         implementation project(':common')
@@ -104,6 +99,7 @@ project(':employee-service') {
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
         runtimeOnly 'org.postgresql:postgresql'
         implementation("org.flywaydb:flyway-database-postgresql")
+        implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
         implementation project(':common')
     }
 }
@@ -116,6 +112,7 @@ project(':attendance-service') {
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
         runtimeOnly 'org.postgresql:postgresql'
         implementation("org.flywaydb:flyway-database-postgresql")
+        implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
         implementation project(':common')
     }
 }
@@ -128,6 +125,7 @@ project(':payroll-service') {
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
         runtimeOnly 'org.postgresql:postgresql'
         implementation("org.flywaydb:flyway-database-postgresql")
+        implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
         implementation project(':common')
     }
 }
@@ -148,6 +146,7 @@ project(':reporting-service') {
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         implementation 'org.springframework.kafka:spring-kafka'
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+        implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
         runtimeOnly 'org.postgresql:postgresql'
         implementation project(':common')
     }
