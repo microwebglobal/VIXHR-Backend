@@ -54,6 +54,19 @@ spring:
           predicates:
             - Path=/actuator/**
 
+        # OpenAPI Routes (Development Only)
+        - id: employee-service-openapi-route
+          uri: http://localhost:8082
+          predicates:
+            - Path=/employee/v3/api-docs
+            - Method=GET
+
+        - id: auth-service-openapi-route
+          uri: http://localhost:8081
+          predicates:
+            - Path=/auth/v3/api-docs
+            - Method=GET
+
 eureka:
   client:
     service-url:
@@ -74,8 +87,6 @@ springdoc:
     path: /swagger-ui.html
     config-url: /v3/api-docs/swagger-config
     urls:
-      - name: gateway-service
-        url: /v3/api-docs
       - name: employee-service
         url: /employee/v3/api-docs
       - name: auth-service
