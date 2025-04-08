@@ -1,6 +1,5 @@
 server:
   port: 8082
-  forward-headers-strategy: framework
 
 spring:
   application:
@@ -37,8 +36,12 @@ eureka:
     lease-renewal-interval-in-seconds: 30
 
 springdoc:
+  api-docs:
+    enabled: true
+    path: /employee/v3/api-docs
   swagger-ui:
-    path: /swagger-ui.html
+    enabled: true
+    path: /employee/swagger-ui.html
     oauth:
       client-id: test-client
       client-secret: secret

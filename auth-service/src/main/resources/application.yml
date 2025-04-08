@@ -1,6 +1,5 @@
 server:
   port: 8081
-  forward-headers-strategy: native
 
 spring:
   application:
@@ -30,6 +29,8 @@ eureka:
     lease-renewal-interval-in-seconds: 30
 
 springdoc:
+  api-docs:
+    path: /auth/v3/api-docs
   swagger-ui:
-    path: /swagger-ui.html
+    path: /auth/swagger-ui.html
   show-oauth2-endpoints: true
