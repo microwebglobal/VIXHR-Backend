@@ -1,13 +1,8 @@
 package com.microwebglobal.vixhr.auth.service;
 
-import com.microwebglobal.vixhr.auth.dto.AuthRequest;
-import com.microwebglobal.vixhr.auth.dto.AuthResponse;
 import com.microwebglobal.vixhr.auth.model.User;
 import com.microwebglobal.vixhr.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,23 +14,13 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final ApplicationContext applicationContext;
 
     @Autowired
     public UserService(
-            UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            JwtService jwtService,
-            ApplicationContext applicationContext) {
+            UserRepository userRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
-        this.applicationContext = applicationContext;
-    }
-
-    private AuthenticationManager getAuthenticationManager() {
-        return applicationContext.getBean(AuthenticationManager.class);
     }
 
     public User createUser(User user) {
@@ -55,27 +40,6 @@ public class UserService implements UserDetailsService {
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-    }
-
-    public AuthResponse authenticate(AuthRequest request) {
-        // Use the lazily retrieved AuthenticationManager
-        getAuthenticationManager().authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
-
-        var user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        UserDetails userDetails = loadUserByUsername(request.getUsername());
-        var jwtToken = jwtService.generateToken(userDetails);
-
-        return AuthResponse.builder()
-                .token(jwtToken)
-                .userId(user.getId())
-                .build();
     }
 
     @Override
