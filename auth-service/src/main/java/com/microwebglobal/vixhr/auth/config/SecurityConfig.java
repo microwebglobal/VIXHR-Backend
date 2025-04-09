@@ -87,12 +87,17 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/auth/v3/api-docs/**", "/auth/swagger-ui/**", "/auth/swagger-ui.html").permitAll()
+                        .requestMatchers(
+                                "/auth/v3/api-docs/**",
+                                "/auth/swagger-ui/**",
+                                "/auth/swagger-ui.html"
+                        ).permitAll()
                         .requestMatchers("/api/users/register").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .anyRequest()
                         .authenticated()
                 )
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
                 .formLogin(withDefaults());
 
         return http.build();
