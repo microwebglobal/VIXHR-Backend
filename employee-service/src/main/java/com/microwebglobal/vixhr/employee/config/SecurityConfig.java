@@ -1,10 +1,11 @@
 package com.microwebglobal.vixhr.employee.config;
 
+import com.microwebglobal.vixhr.common.config.JwtAuthorizationConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -15,13 +16,29 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/employee/v3/api-docs/**", "/employee/swagger-ui/**", "/employee/swagger-ui.html").permitAll()
+                        .requestMatchers(
+                                "/employee/v3/api-docs/**",
+                                "/employee/swagger-ui/**",
+                                "/employee/swagger-ui.html")
+                        .permitAll()
                         .anyRequest()
                         .authenticated()
                 )
                 .oauth2ResourceServer(oauth2 ->
-                        oauth2.jwt(Customizer.withDefaults()));
+                        oauth2.jwt(
+                                jwt -> jwt.jwtAuthenticationConverter(authorizationConverter())
+                        )
+                );
 
         return http.build();
+    }
+
+    @Bean
+    JwtAuthenticationConverter authorizationConverter() {
+        var converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(
+                new JwtAuthorizationConverter()
+        );
+        return converter;
     }
 }
