@@ -15,9 +15,11 @@ spring:
       routes:
         # Auth Service Routes
         - id: auth-service
-          uri: http://localhost:8081
+          uri: lb://auth-service
           predicates:
-            - Path=/api/users/**
+            - Path=/api/users/**, /oauth2/**, /login/**
+          filters:
+            - PreserveHostHeader
 
         # Employee Service Routes
         - id: employee-service
