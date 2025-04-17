@@ -4,20 +4,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.microwebglobal.vixhr.employee.config.Auditable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
-import java.time.LocalDate;
-
 @Entity
 @Getter
 @Setter
 @RequiredArgsConstructor
-@Table(name = "employees")
-public class Employee extends Auditable {
+@Table(name = "job_roles")
+public class JobRole extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,48 +23,22 @@ public class Employee extends Auditable {
 
     @NotNull
     @Positive
-    private Long userId;
-
-    @NotNull
-    @Positive
-    @Column(name = "company_id")
+    @Column(unique = true, name = "company_id")
     private Long companyId;
 
     @NotNull
     @Length(min = 2, max = 50)
-    private String firstName;
-
-    @NotNull
-    @Length(min = 2, max = 50)
-    private String lastName;
-
-    @NotNull
-    @Email
     @Column(unique = true)
-    private String email;
+    private String title;
 
-    @Length(min = 10, max = 10)
-    private String phone;
-
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "department_id")
-    private Department department;
-
-    @NotNull
-    private LocalDate joiningDate;
-
-    private LocalDate terminationDate;
-
-    @Column(unique = true)
     @Length(min = 2, max = 50)
-    private String employeeCode;
+    private String description;
 
     @NotNull
     @DecimalMin(value = "0.0", inclusive = false)
-    private Double baseSalary;
+    private double MinSalary;
 
-    @ManyToOne
-    @JoinColumn(name = "job_role_id")
-    private JobRole jobRole;
+    @NotNull
+    @DecimalMin(value = "0.0", inclusive = false)
+    private double MaxSalary;
 }
