@@ -27,6 +27,12 @@ spring:
           predicates:
             - Path=/api/employees/**
 
+        # Company Service Routes
+        - id: company-service
+          uri: lb://company-service
+          predicates:
+            - Path=/api/companies/**
+
         # Attendance Service Routes
         - id: attendance-service
           uri: lb://attendance-service
@@ -56,18 +62,18 @@ spring:
           predicates:
             - Path=/actuator/**
 
-        # OpenAPI Routes (Development Only)
-        - id: employee-service-openapi-route
-          uri: http://localhost:8082
-          predicates:
-            - Path=/employee/v3/api-docs
-            - Method=GET
-
-        - id: auth-service-openapi-route
-          uri: http://localhost:8081
-          predicates:
-            - Path=/auth/v3/api-docs
-            - Method=GET
+#        # OpenAPI Routes (Development Only)
+#        - id: employee-service-openapi-route
+#          uri: http://localhost:8082
+#          predicates:
+#            - Path=/employee/v3/api-docs
+#            - Method=GET
+#
+#        - id: auth-service-openapi-route
+#          uri: http://localhost:8081
+#          predicates:
+#            - Path=/auth/v3/api-docs
+#            - Method=GET
 
 eureka:
   client:
@@ -81,15 +87,15 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
     lease-renewal-interval-in-seconds: 30
 
-springdoc:
-  api-docs:
-    enabled: true
-  swagger-ui:
-    enabled: true
-    path: /swagger-ui.html
-    config-url: /v3/api-docs/swagger-config
-    urls:
-      - name: employee-service
-        url: /employee/v3/api-docs
-      - name: auth-service
-        url: /auth/v3/api-docs
+#springdoc:
+#  api-docs:
+#    enabled: true
+#  swagger-ui:
+#    enabled: true
+#    path: /swagger-ui.html
+#    config-url: /v3/api-docs/swagger-config
+#    urls:
+#      - name: employee-service
+#        url: /employee/v3/api-docs
+#      - name: auth-service
+#        url: /auth/v3/api-docs

@@ -1,0 +1,49 @@
+server:
+  port: 8087
+
+spring:
+  application:
+    name: company-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/vixhr_company
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  kafka:
+    bootstrap-servers: localhost:9092
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    lease-renewal-interval-in-seconds: 30
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /company/v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /company/swagger-ui.html
+    oauth:
+      client-id: test-client
+      client-secret: secret
+  oAuthFlow:
+    tokenUrl: http://localhost:8081/oauth2/token
