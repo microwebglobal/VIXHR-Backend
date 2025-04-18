@@ -4,4 +4,6 @@ import com.microwebglobal.vixhr.employee.model.JobRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JobRoleRepository extends JpaRepository<JobRole, Long> {
+
+    Iterable<JobRole> findAllByCompanyId(Long companyId);
 }

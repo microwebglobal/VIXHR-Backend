@@ -1,5 +1,6 @@
-package com.microwebglobal.vixhr.employee.config;
+package com.microwebglobal.vixhr.common.config;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -17,8 +18,10 @@ public abstract class Auditable {
 
     @CreatedDate
     @Column(updatable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime updatedAt;
 }

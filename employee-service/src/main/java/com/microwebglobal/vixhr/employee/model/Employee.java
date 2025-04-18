@@ -1,12 +1,9 @@
 package com.microwebglobal.vixhr.employee.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microwebglobal.vixhr.employee.config.Auditable;
+import com.microwebglobal.vixhr.common.config.Auditable;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -25,11 +22,9 @@ public class Employee extends Auditable {
     private Long id;
 
     @NotNull
-    @Positive
     private Long userId;
 
     @NotNull
-    @Positive
     @Column(name = "company_id")
     private Long companyId;
 
@@ -42,7 +37,6 @@ public class Employee extends Auditable {
     private String lastName;
 
     @NotNull
-    @Email
     @Column(unique = true)
     private String email;
 
@@ -60,13 +54,12 @@ public class Employee extends Auditable {
     private LocalDate terminationDate;
 
     @Column(unique = true)
-    @Length(min = 2, max = 50)
     private String employeeCode;
 
     @NotNull
-    @DecimalMin(value = "0.0", inclusive = false)
     private Double baseSalary;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "job_role_id")
     private JobRole jobRole;

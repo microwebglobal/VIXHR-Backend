@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.employee.controller;
 
+import com.microwebglobal.vixhr.employee.dto.employee.EmployeeRequest;
 import com.microwebglobal.vixhr.employee.model.Employee;
 import com.microwebglobal.vixhr.employee.service.EmployeeService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -18,8 +19,8 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @PostMapping
-    public ResponseEntity<Employee> createEmployee(@RequestBody @Valid Employee employee) {
-        Employee createdEmployee = employeeService.createEmployee(employee);
+    public ResponseEntity<Employee> createEmployee(@RequestBody @Valid EmployeeRequest request) {
+        Employee createdEmployee = employeeService.createEmployee(request);
         return new ResponseEntity<>(createdEmployee, HttpStatus.CREATED);
     }
 
@@ -36,8 +37,8 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody  @Valid Employee employee) {
-        Employee updatedEmployee = employeeService.updateEmployee(id, employee);
+    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody  @Valid EmployeeRequest request) {
+        Employee updatedEmployee = employeeService.updateEmployee(id, request);
         return ResponseEntity.ok(updatedEmployee);
     }
 

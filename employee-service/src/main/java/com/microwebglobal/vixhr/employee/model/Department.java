@@ -1,10 +1,9 @@
 package com.microwebglobal.vixhr.employee.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microwebglobal.vixhr.employee.config.Auditable;
+import com.microwebglobal.vixhr.common.config.Auditable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -21,13 +20,12 @@ public class Department extends Auditable {
     private Long id;
 
     @NotNull
-    @Positive
     @Column(unique = true, name = "company_id")
     private Long companyId;
 
     @NotNull
-    @Length(min = 2, max = 50)
     @Column(unique = true)
+    @Length(min = 2, max = 50)
     private String name;
 
     @NotNull
