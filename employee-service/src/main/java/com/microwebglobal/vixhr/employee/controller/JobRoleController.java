@@ -2,12 +2,14 @@ package com.microwebglobal.vixhr.employee.controller;
 
 import com.microwebglobal.vixhr.employee.model.JobRole;
 import com.microwebglobal.vixhr.employee.service.JobRoleService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/job-roles")
+@SecurityRequirement(name = "oauth")
 public class JobRoleController {
 
     private final JobRoleService jobRoleService;
