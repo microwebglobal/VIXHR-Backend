@@ -12,6 +12,7 @@ import org.hibernate.validator.constraints.Length;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "tenants")
 public class Tenant extends Auditable {
 
     @Id
@@ -31,6 +32,7 @@ public class Tenant extends Auditable {
     @Length(min = 2, max = 100)
     private String subdomain;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String logoUrl;
 
     @Length(min = 2, max = 20)

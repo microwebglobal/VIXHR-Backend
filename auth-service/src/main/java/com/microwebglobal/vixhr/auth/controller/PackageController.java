@@ -41,9 +41,24 @@ public class PackageController {
         packageService.addFeatureToPackage(packageId, featureId);
     }
 
+    @PostMapping("/features/package/{packageId}")
+    public void addFeaturesToPackage(@PathVariable Long packageId, @RequestBody Iterable<Long> featureIds) {
+        packageService.addFeaturesToPackage(packageId, featureIds);
+    }
+
     @DeleteMapping("/features/{packageId}/{featureId}")
     public void removeFeatureFromPackage(@PathVariable Long packageId, @PathVariable Long featureId) {
         packageService.removeFeatureFromPackage(packageId, featureId);
+    }
+
+    @DeleteMapping("/features/package/{packageId}")
+    public void removeFeaturesFromPackage(@PathVariable Long packageId, @RequestBody Iterable<Long> featureIds) {
+        packageService.removeFeaturesFromPackage(packageId, featureIds);
+    }
+
+    @GetMapping("/features")
+    public Iterable<Feature> getAllFeatures() {
+        return packageService.getAllFeatures();
     }
 
     @PostMapping("/features")

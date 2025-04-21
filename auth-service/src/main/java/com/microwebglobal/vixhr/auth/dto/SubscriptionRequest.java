@@ -1,8 +1,6 @@
-package com.microwebglobal.vixhr.auth.model;
+package com.microwebglobal.vixhr.auth.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microwebglobal.vixhr.common.Auditable;
-import jakarta.persistence.*;
+import com.microwebglobal.vixhr.auth.model.Subscription;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -13,28 +11,17 @@ import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "subscriptions")
-public class Subscription extends Auditable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long id;
+public class SubscriptionRequest {
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "tenant_id")
-    private Tenant tenant;
+    private Long tenantId;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "package_id")
-    private Package packageType;
+    private Long packageId;
 
     @NotNull
     private LocalDate startDate;
@@ -53,4 +40,14 @@ public class Subscription extends Auditable {
     @NotNull
     @Length(min = 2, max = 20)
     private String status;
+
+    public Subscription toSubscription() {
+        Subscription subscription = new Subscription();
+        subscription.setStartDate(startDate);
+        subscription.setEndDate(endDate);
+        subscription.setBillingCycle(billingCycle);
+        subscription.setAmount(amount);
+        subscription.setStatus(status);
+        return subscription;
+    }
 }

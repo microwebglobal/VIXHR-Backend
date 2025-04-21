@@ -15,6 +15,7 @@ import org.hibernate.validator.constraints.Length;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "features")
 public class Feature extends Auditable {
 
     @Id

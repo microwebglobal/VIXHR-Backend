@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.auth.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "package_features")
 public class PackageFeature {
 
     @Id
@@ -22,6 +24,7 @@ public class PackageFeature {
 
     @NotNull
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "package_id", unique = true)
     private Package packageType;
 

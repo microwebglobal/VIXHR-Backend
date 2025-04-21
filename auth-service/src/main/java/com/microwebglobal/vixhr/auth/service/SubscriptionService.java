@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.auth.service;
 
+import com.microwebglobal.vixhr.auth.dto.SubscriptionRequest;
 import com.microwebglobal.vixhr.auth.model.Subscription;
 import com.microwebglobal.vixhr.auth.repository.PackageRepository;
 import com.microwebglobal.vixhr.auth.repository.SubscriptionRepository;
@@ -24,17 +25,40 @@ public class SubscriptionService {
                 .orElseThrow(() -> new RuntimeException("Subscription not found for ID: " + id));
     }
 
-    public Subscription createSubscription(Subscription subscription) {
-        var tenant = tenantRepository.findById(subscription.getTenant().getId())
-                .orElseThrow(() -> new RuntimeException("Tenant not found for ID: " + subscription.getTenant().getId()));
+    public Subscription createSubscription(SubscriptionRequest request) {
+        var tenant = tenantRepository.findById(request.getTenantId())
+                .orElseThrow(() -> new RuntimeException("Tenant not found for ID: " + request.getTenantId()));
 
-        var packageType = packageRepository.findById(subscription.getPackageType().getId())
-                .orElseThrow(() -> new RuntimeException("Package not found for ID: " + subscription.getPackageType().getId()));
+        var packageType = packageRepository.findById(request.getPackageId())
+                .orElseThrow(() -> new RuntimeException("Package not found for ID: " + request.getPackageId()));
 
+        var subscription = request.toSubscription();
         subscription.setTenant(tenant);
         subscription.setPackageType(packageType);
-        subscription.setStatus("Active");
-
         return subscriptionRepository.save(subscription);
+    }
+
+    public Subscription updateSubscription(Long id, SubscriptionRequest request) {
+        subscriptionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Subscription not found for ID: " + id));
+
+        var tenant = tenantRepository.findById(request.getTenantId())
+                .orElseThrow(() -> new RuntimeException("Tenant not found for ID: " + request.getTenantId()));
+
+        var packageType = packageRepository.findById(request.getPackageId())
+                .orElseThrow(() -> new RuntimeException("Package not found for ID: " + request.getPackageId()));
+
+        var subscription = request.toSubscription();
+        subscription.setId(id);
+        subscription.setTenant(tenant);
+        subscription.setPackageType(packageType);
+        return subscriptionRepository.save(subscription);
+    }
+
+    public void deleteSubscription(Long id) {
+        var subscription = subscriptionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Subscription not found for ID: " + id));
+
+        subscriptionRepository.delete(subscription);
     }
 }

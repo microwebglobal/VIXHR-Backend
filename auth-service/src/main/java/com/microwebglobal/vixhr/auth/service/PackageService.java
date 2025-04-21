@@ -58,6 +58,22 @@ public class PackageService {
         packageFeatureRepository.save(packageFeature);
     }
 
+    public void addFeaturesToPackage(Long packageId, Iterable<Long> featureIds) {
+        var packageType = packageRepository.findById(packageId)
+                .orElseThrow(() -> new RuntimeException("Package not found for ID: " + packageId));
+
+        for (Long featureId : featureIds) {
+            var feature = featureRepository.findById(featureId)
+                    .orElseThrow(() -> new RuntimeException("Feature not found for ID: " + featureId));
+
+            var packageFeature = new PackageFeature();
+            packageFeature.setPackageType(packageType);
+            packageFeature.setFeature(feature);
+
+            packageFeatureRepository.save(packageFeature);
+        }
+    }
+
     public void removeFeatureFromPackage(Long packageId, Long featureId) {
         var packageType = packageRepository.findById(packageId)
                 .orElseThrow(() -> new RuntimeException("Package not found for ID: " + packageId));
@@ -67,6 +83,23 @@ public class PackageService {
 
         var packageFeature = packageFeatureRepository.findByPackageTypeAndFeature(packageType, feature);
         packageFeatureRepository.delete(packageFeature);
+    }
+
+    public void removeFeaturesFromPackage(Long packageId, Iterable<Long> featureIds) {
+        var packageType = packageRepository.findById(packageId)
+                .orElseThrow(() -> new RuntimeException("Package not found for ID: " + packageId));
+
+        for (Long featureId : featureIds) {
+            var feature = featureRepository.findById(featureId)
+                    .orElseThrow(() -> new RuntimeException("Feature not found for ID: " + featureId));
+
+            var packageFeature = packageFeatureRepository.findByPackageTypeAndFeature(packageType, feature);
+            packageFeatureRepository.delete(packageFeature);
+        }
+    }
+
+    public Iterable<Feature> getAllFeatures() {
+        return featureRepository.findAll();
     }
 
     public Feature createFeature(Feature feature) {
