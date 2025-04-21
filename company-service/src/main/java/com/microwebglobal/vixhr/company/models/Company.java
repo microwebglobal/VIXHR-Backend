@@ -1,7 +1,7 @@
 package com.microwebglobal.vixhr.company.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microwebglobal.vixhr.common.config.Auditable;
+import com.microwebglobal.vixhr.common.Auditable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

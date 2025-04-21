@@ -1,4 +1,4 @@
-package com.microwebglobal.vixhr.employee.config;
+package com.microwebglobal.vixhr.common.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.security.OAuthFlow;
 import io.swagger.v3.oas.annotations.security.OAuthFlows;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
-@OpenAPIDefinition(info = @Info(title = "Employee API"))
+@OpenAPIDefinition(info = @Info(title = "API"))
 @SecurityScheme(
         name = "oauth",
         type = SecuritySchemeType.OAUTH2,

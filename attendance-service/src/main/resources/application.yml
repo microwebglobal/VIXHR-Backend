@@ -31,5 +31,12 @@ eureka:
     lease-renewal-interval-in-seconds: 30
 
 springdoc:
+  api-docs:
+    enabled: true
   swagger-ui:
-    path: /swagger-ui.html
+    enabled: true
+    oauth:
+      client-id: test-client
+      client-secret: secret
+  oAuthFlow:
+    tokenUrl: http://localhost:8081/oauth2/token

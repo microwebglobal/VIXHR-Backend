@@ -1,22 +1,18 @@
-package com.microwebglobal.vixhr.company.models;
+package com.microwebglobal.vixhr.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.microwebglobal.vixhr.common.Auditable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
-
-import java.time.LocalDate;
 
 @Entity
 @Getter
 @Setter
-@RequiredArgsConstructor
-@Table(name = "holidays")
-public class Holiday extends Auditable {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Tenant extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,19 +20,24 @@ public class Holiday extends Auditable {
     private Long id;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
-
-    @NotNull
     @Length(min = 2, max = 100)
     private String name;
 
-    @NotNull
-    private LocalDate date;
-
-    private boolean isRecurring = false;
-
     @Length(min = 2, max = 100)
-    private String description;
+    private String domain;
+
+    @NotNull
+    @Column(unique = true)
+    @Length(min = 2, max = 100)
+    private String subdomain;
+
+    private String logoUrl;
+
+    @Length(min = 2, max = 20)
+    private String primaryColor;
+
+    @Length(min = 2, max = 20)
+    private String secondaryColor;
+
+    private boolean active = true;
 }

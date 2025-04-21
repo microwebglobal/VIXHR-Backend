@@ -1,22 +1,21 @@
-package com.microwebglobal.vixhr.company.models;
+package com.microwebglobal.vixhr.auth.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.microwebglobal.vixhr.common.Auditable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-
-import java.time.LocalDate;
 
 @Entity
 @Getter
 @Setter
-@RequiredArgsConstructor
-@Table(name = "holidays")
-public class Holiday extends Auditable {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Feature extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,19 +23,18 @@ public class Holiday extends Auditable {
     private Long id;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
-
-    @NotNull
     @Length(min = 2, max = 100)
     private String name;
 
     @NotNull
-    private LocalDate date;
+    @Column(unique = true)
+    @Length(min = 2, max = 50)
+    private String code;
 
-    private boolean isRecurring = false;
-
-    @Length(min = 2, max = 100)
+    @Length(min = 2, max = 500)
     private String description;
+
+    @NotNull
+    @Length(min = 2, max = 50)
+    private String module;
 }

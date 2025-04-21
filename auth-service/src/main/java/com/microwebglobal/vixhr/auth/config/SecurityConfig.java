@@ -88,9 +88,9 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(
-                                "/auth/v3/api-docs/**",
-                                "/auth/swagger-ui/**",
-                                "/auth/swagger-ui.html"
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
                         ).permitAll()
                         .requestMatchers("/api/users/register").permitAll()
                         .requestMatchers("/actuator/**").permitAll()

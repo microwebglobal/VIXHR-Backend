@@ -1,6 +1,6 @@
-package com.microwebglobal.vixhr.employee.config;
+package com.microwebglobal.vixhr.common.config;
 
-import com.microwebglobal.vixhr.common.config.JwtAuthorizationConverter;
+import com.microwebglobal.vixhr.common.JwtAuthorizationConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -19,9 +19,10 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/employee/v3/api-docs/**",
-                                "/employee/swagger-ui/**",
-                                "/employee/swagger-ui.html")
+                                "/actuator/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html")
                         .permitAll()
                         .anyRequest()
                         .authenticated()

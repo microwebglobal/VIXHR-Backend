@@ -1,4 +1,4 @@
-package com.microwebglobal.vixhr.common.config;
+package com.microwebglobal.vixhr.common;
 
 import lombok.Builder;
 import lombok.Data;

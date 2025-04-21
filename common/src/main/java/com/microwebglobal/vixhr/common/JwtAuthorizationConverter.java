@@ -1,4 +1,4 @@
-package com.microwebglobal.vixhr.common.config;
+package com.microwebglobal.vixhr.common;
 
 import jakarta.annotation.Nonnull;
 import org.springframework.core.convert.converter.Converter;

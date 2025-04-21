@@ -1,4 +1,4 @@
-package com.microwebglobal.vixhr.employee.config;
+package com.microwebglobal.vixhr.common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

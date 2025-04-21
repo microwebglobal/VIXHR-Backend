@@ -39,10 +39,8 @@ eureka:
 springdoc:
   api-docs:
     enabled: true
-    path: /company/v3/api-docs
   swagger-ui:
     enabled: true
-    path: /company/swagger-ui.html
     oauth:
       client-id: test-client
       client-secret: secret

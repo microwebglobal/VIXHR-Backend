@@ -1,4 +1,4 @@
-package com.microwebglobal.vixhr.common.config;
+package com.microwebglobal.vixhr.common;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
