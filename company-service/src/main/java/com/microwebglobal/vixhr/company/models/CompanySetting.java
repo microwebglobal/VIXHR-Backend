@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.company.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.microwebglobal.vixhr.common.config.Auditable;
 import jakarta.persistence.*;
@@ -9,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
-import java.sql.Time;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -33,10 +34,12 @@ public class CompanySetting extends Auditable {
     private String workingDays;
 
     @NotNull
-    private Time standardWorkHoursStart;
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime standardWorkHoursStart;
 
     @NotNull
-    private Time standardWorkHoursEnd;
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime standardWorkHoursEnd;
 
     @NotNull
     private double regularHoursPerDay;

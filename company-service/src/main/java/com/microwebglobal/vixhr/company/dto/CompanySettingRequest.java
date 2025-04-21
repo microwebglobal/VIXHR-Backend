@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.company.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.microwebglobal.vixhr.company.models.CompanySetting;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
-import java.sql.Time;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -25,10 +26,12 @@ public class CompanySettingRequest {
     private String workingDays;
 
     @NotNull
-    private Time standardWorkHoursStart;
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime standardWorkHoursStart;
 
     @NotNull
-    private Time standardWorkHoursEnd;
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime standardWorkHoursEnd;
 
     @NotNull
     private double regularHoursPerDay;

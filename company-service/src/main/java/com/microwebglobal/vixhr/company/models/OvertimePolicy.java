@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.company.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.microwebglobal.vixhr.common.config.Auditable;
 import jakarta.persistence.*;
@@ -10,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
-import java.sql.Time;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -38,10 +39,12 @@ public class OvertimePolicy extends Auditable {
     private double rateMultiplier;
 
     @NotNull
-    private Time startTime;
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime startTime;
 
     @NotNull
-    private Time endTime;
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime endTime;
 
     @Column(columnDefinition = "jsonb")
     private String applicableDays;

@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.company.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.microwebglobal.vixhr.company.models.OvertimePolicy;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
-import java.sql.Time;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -31,10 +32,12 @@ public class OvertimePolicyRequest {
     private double rateMultiplier;
 
     @NotNull
-    private Time startTime;
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime startTime;
 
     @NotNull
-    private Time endTime;
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime endTime;
 
     private String applicableDays;
 
