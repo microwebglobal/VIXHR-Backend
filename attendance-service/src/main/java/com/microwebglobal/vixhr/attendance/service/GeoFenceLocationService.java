@@ -25,15 +25,11 @@ public class GeoFenceLocationService {
     }
 
     public GeoFenceLocation updateGeoFenceLocation(Long id, GeoFenceLocation geoFenceLocation) {
-        GeoFenceLocation existingGeoFenceLocation = geoFenceLocationRepository.findById(id)
+        geoFenceLocationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("GeoFenceLocation not found"));
 
-        existingGeoFenceLocation.setName(geoFenceLocation.getName());
-        existingGeoFenceLocation.setLatitude(geoFenceLocation.getLatitude());
-        existingGeoFenceLocation.setLongitude(geoFenceLocation.getLongitude());
-        existingGeoFenceLocation.setRadius(geoFenceLocation.getRadius());
-        existingGeoFenceLocation.setAddress(geoFenceLocation.getAddress());
-        return geoFenceLocationRepository.save(existingGeoFenceLocation);
+        geoFenceLocation.setId(id);
+        return geoFenceLocationRepository.save(geoFenceLocation);
     }
 
     public void deleteGeoFenceLocation(Long id) {

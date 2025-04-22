@@ -5,20 +5,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.microwebglobal.vixhr.common.Auditable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "overtime_clock_events")
 public class OvertimeClockEvent extends Auditable {
 
     @Id

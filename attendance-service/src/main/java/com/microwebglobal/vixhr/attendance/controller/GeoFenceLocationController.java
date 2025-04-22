@@ -29,7 +29,10 @@ public class GeoFenceLocationController {
     }
 
     @PutMapping("/{id}")
-    public GeoFenceLocation updateGeoFenceLocation(@PathVariable Long id, @RequestBody @Valid GeoFenceLocation geoFenceLocation) {
+    public GeoFenceLocation updateGeoFenceLocation(
+            @PathVariable Long id,
+            @RequestBody @Valid GeoFenceLocation geoFenceLocation
+    ) {
         return geoFenceLocationService.updateGeoFenceLocation(id, geoFenceLocation);
     }
 
