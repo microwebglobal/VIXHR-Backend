@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/vixhr_company
+    username: ${DOCKER_DB_USERNAME:vixhruser}
+    password: ${DOCKER_DB_PASSWORD:vixhrpassword}
+  kafka:
+    bootstrap-servers: kafka:29092
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/
+  instance:
+    hostname: company-service

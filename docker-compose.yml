@@ -150,6 +150,35 @@ services:
       retries: 5
       start_period: 60s
 
+  company-service:
+    build: ./company-service
+    container_name: vixhr-company-service
+    ports:
+      - "8087:8087"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/vixhr_company
+      - DOCKER_DB_USERNAME=${POSTGRES_USER:-vixhruser}
+      - DOCKER_DB_PASSWORD=${POSTGRES_PASSWORD:-vixhrpassword}
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - EUREKA_SERVER_URL=http://discovery-service:8761/eureka/
+      - HOSTNAME=company-service
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - vixhr-network
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "http://localhost:8087/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
   attendance-service:
     build: ./attendance-service
     container_name: vixhr-attendance-service
