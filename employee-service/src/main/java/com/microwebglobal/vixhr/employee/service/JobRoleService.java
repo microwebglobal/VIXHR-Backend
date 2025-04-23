@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.employee.service;
 
+import com.microwebglobal.vixhr.employee.client.CompanyClient;
 import com.microwebglobal.vixhr.employee.model.JobRole;
 import com.microwebglobal.vixhr.employee.repository.JobRoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class JobRoleService {
 
+    private final CompanyClient companyClient;
     private final JobRoleRepository jobRoleRepository;
 
     public Iterable<JobRole> getAllJobRolesByCompany(Long companyId) {
@@ -21,6 +23,7 @@ public class JobRoleService {
     }
 
     public JobRole createJobRole(JobRole jobRole) {
+        companyClient.getCompanyById(jobRole.getCompanyId());
         return jobRoleRepository.save(jobRole);
     }
 
@@ -28,6 +31,7 @@ public class JobRoleService {
         jobRoleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Job Role not found for ID: " + id));
 
+        companyClient.getCompanyById(jobRole.getCompanyId());
         jobRole.setId(id);
         return jobRoleRepository.save(jobRole);
     }

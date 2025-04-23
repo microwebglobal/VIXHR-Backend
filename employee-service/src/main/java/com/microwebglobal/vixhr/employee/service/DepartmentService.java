@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.employee.service;
 
+import com.microwebglobal.vixhr.employee.client.CompanyClient;
 import com.microwebglobal.vixhr.employee.dto.department.DepartmentRequest;
 import com.microwebglobal.vixhr.employee.model.Department;
 import com.microwebglobal.vixhr.employee.repository.DepartmentRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DepartmentService {
 
+    private final CompanyClient companyClient;
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
 
@@ -24,8 +26,9 @@ public class DepartmentService {
     }
 
     public Department createDepartment(DepartmentRequest request) {
-        var department = request.toDepartment();
+        companyClient.getCompanyById(request.getCompanyId());
 
+        var department = request.toDepartment();
         if (request.getManagerId() != null){
             var manager = employeeRepository.findById(request.getManagerId())
                     .orElseThrow(() -> new RuntimeException("Manager not found for ID: " + request.getManagerId()));
@@ -40,8 +43,9 @@ public class DepartmentService {
         departmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Department not found for ID: " + id));
 
-        var department = request.toDepartment();
+        companyClient.getCompanyById(request.getCompanyId());
 
+        var department = request.toDepartment();
         if (request.getManagerId() != null){
             var manager = employeeRepository.findById(request.getManagerId())
                     .orElseThrow(() -> new RuntimeException("Manager not found for ID: " + request.getManagerId()));

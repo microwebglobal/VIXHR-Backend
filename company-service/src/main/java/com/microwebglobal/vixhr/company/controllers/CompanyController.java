@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/company")
+@RequestMapping("/api/companies")
 @SecurityRequirement(name = "oauth")
 class CompanyController {
 

@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.employee.service;
 
+import com.microwebglobal.vixhr.employee.client.CompanyClient;
 import com.microwebglobal.vixhr.employee.dto.employee.EmployeeRequest;
 import com.microwebglobal.vixhr.employee.model.Employee;
 import com.microwebglobal.vixhr.employee.repository.DepartmentRepository;
@@ -12,12 +13,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmployeeService {
 
+    private final CompanyClient companyClient;
     private final JobRoleRepository jobRoleRepository;
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
 
     public Employee createEmployee(EmployeeRequest request) {
         var employee = request.toEmployee();
+        companyClient.getCompanyById(request.getCompanyId());
 
         var department = departmentRepository.findById(request.getDepartmentId())
                 .orElseThrow(() -> new RuntimeException("Department not found for ID: " + request.getDepartmentId()));
@@ -47,6 +50,7 @@ public class EmployeeService {
         employeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Employee not found for ID: " + id));
 
+        companyClient.getCompanyById(request.getCompanyId());
         var employee = request.toEmployee();
 
         var department = departmentRepository.findById(request.getDepartmentId())
