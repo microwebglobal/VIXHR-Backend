@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.attendance.service;
 
+import com.microwebglobal.vixhr.attendance.client.EmployeeClient;
 import com.microwebglobal.vixhr.attendance.dto.OvertimeClockRequest;
 import com.microwebglobal.vixhr.attendance.model.EmployeeOvertime;
 import com.microwebglobal.vixhr.attendance.model.OvertimeClockEvent;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmployeeOvertimeService {
 
+    private final EmployeeClient employeeClient;
     private final OvertimeClockEventRepository overtimeClockEventRepository;
     private final EmployeeOvertimeRepository employeeOvertimeRepository;
 
@@ -51,6 +53,12 @@ public class EmployeeOvertimeService {
     }
 
     public void clockIn(OvertimeClockRequest request) {
+        var response = employeeClient.getEmployeeById(request.getEmployeeId());
+        if (response == null || !response.getUserId().equals(request.getSubmittedBy())) {
+            assert response != null;
+            throw new RuntimeException("Invalid clock-in request for employee" + response.getId());
+        }
+
         var clockEvent = OvertimeClockEvent.builder()
                 .employeeId(request.getEmployeeId())
                 .address(request.getAddress())
@@ -65,6 +73,12 @@ public class EmployeeOvertimeService {
     }
 
     public void clockOut(OvertimeClockRequest request) {
+        var response = employeeClient.getEmployeeById(request.getEmployeeId());
+        if (response == null || !response.getUserId().equals(request.getSubmittedBy())) {
+            assert response != null;
+            throw new RuntimeException("Invalid clock-out request for employee" + response.getId());
+        }
+
         var clockEvent = OvertimeClockEvent.builder()
                 .employeeId(request.getEmployeeId())
                 .address(request.getAddress())

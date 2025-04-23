@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.attendance.service;
 
+import com.microwebglobal.vixhr.attendance.client.EmployeeClient;
 import com.microwebglobal.vixhr.attendance.dto.AttendanceRequest;
 import com.microwebglobal.vixhr.attendance.model.AttendanceRecord;
 import com.microwebglobal.vixhr.attendance.repository.AttendanceRecordRepository;
@@ -14,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AttendanceRecordService {
 
+    private final EmployeeClient employeeClient;
     private final AttendanceRecordRepository attendanceRecordRepository;
 
     public List<AttendanceRecord> getAttendanceByEmployeeId(Long employeeId) {
@@ -45,6 +47,12 @@ public class AttendanceRecordService {
     }
 
     public void clockIn(AttendanceRequest request) {
+        var response = employeeClient.getEmployeeById(request.getEmployeeId());
+        if (response == null || !response.getUserId().equals(request.getSubmittedBy())) {
+            assert response != null;
+            throw new RuntimeException("Invalid clock-in request for employee" + response.getId());
+        }
+
         var attendanceRecord = AttendanceRecord.builder()
                 .employeeId(request.getEmployeeId())
                 .checkInAddress(request.getAddress())
@@ -63,11 +71,16 @@ public class AttendanceRecordService {
                 .findByEmployeeIdAndDate(request.getEmployeeId(), LocalDate.now())
                 .orElseThrow(() -> new RuntimeException("Attendance record not found for employee ID: " + request.getEmployeeId()));
 
+        var response = employeeClient.getEmployeeById(request.getEmployeeId());
+        if (response == null || !response.getUserId().equals(request.getSubmittedBy())) {
+            assert response != null;
+            throw new RuntimeException("Invalid clock-out request for employee" + response.getId());
+        }
+
         attendanceRecord.setCheckoutAddress(request.getAddress());
         attendanceRecord.setCheckoutDeviceId(request.getDeviceId());
         attendanceRecord.setCheckoutIp(request.getIpAddress());
         attendanceRecord.setCheckOutTime(LocalTime.now());
-        attendanceRecord.setStatus("Present");
 
         attendanceRecordRepository.save(attendanceRecord);
     }

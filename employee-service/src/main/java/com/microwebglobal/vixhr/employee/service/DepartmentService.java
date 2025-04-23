@@ -26,10 +26,13 @@ public class DepartmentService {
     public Department createDepartment(DepartmentRequest request) {
         var department = request.toDepartment();
 
-        var manager = employeeRepository.findById(request.getManagerId())
-                .orElseThrow(() -> new RuntimeException("Manager not found for ID: " + request.getManagerId()));
+        if (request.getManagerId() != null){
+            var manager = employeeRepository.findById(request.getManagerId())
+                    .orElseThrow(() -> new RuntimeException("Manager not found for ID: " + request.getManagerId()));
 
-        department.setManager(manager);
+            department.setManager(manager);
+        }
+
         return departmentRepository.save(department);
     }
 
@@ -39,11 +42,14 @@ public class DepartmentService {
 
         var department = request.toDepartment();
 
-        var manager = employeeRepository.findById(request.getManagerId())
-                .orElseThrow(() -> new RuntimeException("Manager not found for ID: " + request.getManagerId()));
+        if (request.getManagerId() != null){
+            var manager = employeeRepository.findById(request.getManagerId())
+                    .orElseThrow(() -> new RuntimeException("Manager not found for ID: " + request.getManagerId()));
+
+            department.setManager(manager);
+        }
 
         department.setId(id);
-        department.setManager(manager);
         return departmentRepository.save(department);
     }
 

@@ -2,12 +2,14 @@ package com.microwebglobal.vixhr.attendance.controller;
 
 import com.microwebglobal.vixhr.attendance.model.GeoFenceLocation;
 import com.microwebglobal.vixhr.attendance.service.GeoFenceLocationService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "oauth")
 @RequestMapping("/api/geo-fence-locations")
 public class GeoFenceLocationController {
 

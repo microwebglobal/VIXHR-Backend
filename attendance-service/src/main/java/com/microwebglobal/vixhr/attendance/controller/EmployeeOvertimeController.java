@@ -4,6 +4,7 @@ import com.microwebglobal.vixhr.attendance.dto.OvertimeClockRequest;
 import com.microwebglobal.vixhr.attendance.model.EmployeeOvertime;
 import com.microwebglobal.vixhr.attendance.model.OvertimeClockEvent;
 import com.microwebglobal.vixhr.attendance.service.EmployeeOvertimeService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/overtime")
+@SecurityRequirement(name = "oauth")
 public class EmployeeOvertimeController {
 
     private final EmployeeOvertimeService employeeOvertimeService;

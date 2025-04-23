@@ -65,6 +65,7 @@ project(':common') {
         implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
         implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+        implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     }
 }

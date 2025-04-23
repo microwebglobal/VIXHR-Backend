@@ -32,7 +32,6 @@ public class Department extends Auditable {
     @Length(min = 2, max = 50)
     private String description;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "manager_id")
     private Employee manager;

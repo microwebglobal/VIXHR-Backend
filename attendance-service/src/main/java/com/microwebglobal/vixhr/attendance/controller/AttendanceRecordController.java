@@ -3,6 +3,7 @@ package com.microwebglobal.vixhr.attendance.controller;
 import com.microwebglobal.vixhr.attendance.dto.AttendanceRequest;
 import com.microwebglobal.vixhr.attendance.model.AttendanceRecord;
 import com.microwebglobal.vixhr.attendance.service.AttendanceRecordService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/attendance")
+@SecurityRequirement(name = "oauth")
 public class AttendanceRecordController {
 
     private final AttendanceRecordService attendanceRecordService;
@@ -51,18 +53,28 @@ public class AttendanceRecordController {
 
     @PostMapping("/clock-in")
     @ResponseStatus(HttpStatus.CREATED)
-    public void clockIn (@RequestBody AttendanceRequest request, HttpServletRequest httpRequest, Principal principal) {
+    public void clockIn (
+            @RequestBody AttendanceRequest request,
+            HttpServletRequest httpRequest,
+            Principal principal,
+            @RequestHeader("User-Agent") String deviceId
+    ) {
         request.setIpAddress(httpRequest.getRemoteAddr());
-        request.setDeviceId(httpRequest.getRemoteHost());
+        request.setDeviceId(deviceId);
         request.setSubmittedBy(principal.getName());
         attendanceRecordService.clockIn(request);
     }
 
     @PostMapping("/clock-out")
     @ResponseStatus(HttpStatus.CREATED)
-    public void clockOut (@RequestBody AttendanceRequest request, HttpServletRequest httpRequest, Principal principal) {
+    public void clockOut (
+            @RequestBody AttendanceRequest request,
+            HttpServletRequest httpRequest,
+            Principal principal,
+            @RequestHeader("User-Agent") String deviceId
+    ) {
         request.setIpAddress(httpRequest.getRemoteAddr());
-        request.setDeviceId(httpRequest.getRemoteHost());
+        request.setDeviceId(deviceId);
         request.setSubmittedBy(principal.getName());
         attendanceRecordService.clockOut(request);
     }
