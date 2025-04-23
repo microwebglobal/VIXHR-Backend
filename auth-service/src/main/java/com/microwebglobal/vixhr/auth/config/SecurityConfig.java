@@ -58,15 +58,14 @@ public class SecurityConfig {
 
     @Bean
     @Order(1)
-    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
-            throws Exception {
+    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
                 .oidc(withDefaults());	// Enable OpenID Connect 1.0
+
         http
                 .cors(withDefaults())
-                // Redirect to the login page when not authenticated from the
-                // authorization endpoint
+                // Redirect to the login page when not authenticated
                 .exceptionHandling((exceptions) -> exceptions
                         .defaultAuthenticationEntryPointFor(
                                 new LoginUrlAuthenticationEntryPoint("/login"),
@@ -91,7 +90,8 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
-                        ).permitAll()
+                        )
+                        .permitAll()
                         .requestMatchers("/api/users/register").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .anyRequest()
@@ -103,6 +103,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // Register clients
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
         RegisteredClient spaClient = RegisteredClient.withId(UUID.randomUUID().toString())
@@ -166,6 +167,7 @@ public class SecurityConfig {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
     }
 
+    // Customize Authorization Server
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
@@ -178,6 +180,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // Customize JWT Claims
     @Bean
     OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer() {
         return context -> {
@@ -192,6 +195,7 @@ public class SecurityConfig {
         };
     }
 
+    // Cors Configuration
     @Bean
     CorsConfigurationSource corsConfig() {
         CorsConfiguration corsConfig = new CorsConfiguration();

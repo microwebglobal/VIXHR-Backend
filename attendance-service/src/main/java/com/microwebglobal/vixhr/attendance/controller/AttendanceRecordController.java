@@ -54,9 +54,9 @@ public class AttendanceRecordController {
     @PostMapping("/clock-in")
     @ResponseStatus(HttpStatus.CREATED)
     public void clockIn (
-            @RequestBody AttendanceRequest request,
-            HttpServletRequest httpRequest,
             Principal principal,
+            HttpServletRequest httpRequest,
+            @RequestBody AttendanceRequest request,
             @RequestHeader("User-Agent") String deviceId
     ) {
         request.setIpAddress(httpRequest.getRemoteAddr());
@@ -68,9 +68,9 @@ public class AttendanceRecordController {
     @PostMapping("/clock-out")
     @ResponseStatus(HttpStatus.CREATED)
     public void clockOut (
-            @RequestBody AttendanceRequest request,
-            HttpServletRequest httpRequest,
             Principal principal,
+            HttpServletRequest httpRequest,
+            @RequestBody AttendanceRequest request,
             @RequestHeader("User-Agent") String deviceId
     ) {
         request.setIpAddress(httpRequest.getRemoteAddr());
