@@ -5,6 +5,11 @@ spring:
     password: ${DOCKER_DB_PASSWORD:vixhrpassword}
   kafka:
     bootstrap-servers: kafka:29092
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
 
 eureka:
   client:
