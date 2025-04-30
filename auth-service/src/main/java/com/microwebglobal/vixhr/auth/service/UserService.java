@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.auth.service;
 
+import com.microwebglobal.vixhr.auth.model.CustomUserDetails;
 import com.microwebglobal.vixhr.auth.model.User;
 import com.microwebglobal.vixhr.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,6 @@ public class UserService implements UserDetailsService {
 
         // Hash the password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         return userRepository.save(user);
     }
 
@@ -47,14 +47,6 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getUsername())
-                .password(user.getPassword())
-                .authorities("ROLE_" + user.getRole())
-                .accountExpired(!user.getActive())
-                .accountLocked(!user.getActive())
-                .credentialsExpired(!user.getActive())
-                .disabled(!user.getActive())
-                .build();
+        return new CustomUserDetails(user);
     }
 }

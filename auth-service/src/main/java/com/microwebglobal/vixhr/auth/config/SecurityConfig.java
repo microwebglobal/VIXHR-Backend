@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.auth.config;
 
+import com.microwebglobal.vixhr.auth.model.CustomUserDetails;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -186,11 +187,19 @@ public class SecurityConfig {
         return context -> {
             if (context.getTokenType() == OAuth2TokenType.ACCESS_TOKEN) {
                 Authentication principal = context.getPrincipal();
-                Set<String> authorities = principal.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toSet());
 
-                context.getClaims().claim("roles", authorities);
+                if (!principal.getAuthorities().isEmpty()) {
+                    Set<String> authorities = principal.getAuthorities().stream()
+                            .map(GrantedAuthority::getAuthority)
+                            .collect(Collectors.toSet());
+
+                    context.getClaims().claim("roles", authorities);
+                }
+
+                Object principalObj = principal.getPrincipal();
+                if (principalObj instanceof CustomUserDetails customUserDetails) {
+                    context.getClaims().claim("userId", customUserDetails.getId());
+                }
             }
         };
     }
