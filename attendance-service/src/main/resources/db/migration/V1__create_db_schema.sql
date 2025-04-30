@@ -6,7 +6,7 @@ CREATE TABLE attendance_records
     employee_id        BIGINT                                  NOT NULL,
     date               date                                    NOT NULL,
     check_in_time      time WITHOUT TIME ZONE                  NOT NULL,
-    check_out_time     time WITHOUT TIME ZONE                  NOT NULL,
+    check_out_time     time WITHOUT TIME ZONE,
     check_in_longitude DOUBLE PRECISION                        NOT NULL,
     check_in_latitude  DOUBLE PRECISION                        NOT NULL,
     checkout_longitude DOUBLE PRECISION                        NOT NULL,

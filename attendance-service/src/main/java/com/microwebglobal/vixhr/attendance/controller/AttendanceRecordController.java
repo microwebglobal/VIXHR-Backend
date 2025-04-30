@@ -8,9 +8,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -54,28 +55,28 @@ public class AttendanceRecordController {
     @PostMapping("/clock-in")
     @ResponseStatus(HttpStatus.CREATED)
     public void clockIn (
-            Principal principal,
+            @AuthenticationPrincipal Jwt token,
             HttpServletRequest httpRequest,
             @RequestBody AttendanceRequest request,
             @RequestHeader("User-Agent") String deviceId
     ) {
-        request.setIpAddress(httpRequest.getRemoteAddr());
         request.setDeviceId(deviceId);
-        request.setSubmittedBy(principal.getName());
+        request.setIpAddress(httpRequest.getRemoteAddr());
+        request.setSubmittedBy(token.getClaimAsString("userId"));
         attendanceRecordService.clockIn(request);
     }
 
     @PostMapping("/clock-out")
     @ResponseStatus(HttpStatus.CREATED)
     public void clockOut (
-            Principal principal,
+            @AuthenticationPrincipal Jwt token,
             HttpServletRequest httpRequest,
             @RequestBody AttendanceRequest request,
             @RequestHeader("User-Agent") String deviceId
     ) {
-        request.setIpAddress(httpRequest.getRemoteAddr());
         request.setDeviceId(deviceId);
-        request.setSubmittedBy(principal.getName());
+        request.setIpAddress(httpRequest.getRemoteAddr());
+        request.setSubmittedBy(token.getClaimAsString("userId"));
         attendanceRecordService.clockOut(request);
     }
 }

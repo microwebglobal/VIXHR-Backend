@@ -50,7 +50,7 @@ public class AttendanceRecordService {
         var response = employeeClient.getEmployeeById(request.getEmployeeId());
         if (response == null || !response.getUserId().equals(request.getSubmittedBy())) {
             assert response != null;
-            throw new RuntimeException("Invalid clock-in request for employee" + response.getId());
+            throw new RuntimeException("Unauthorized clock-in attempt");
         }
 
         var attendanceRecord = AttendanceRecord.builder()
@@ -74,7 +74,7 @@ public class AttendanceRecordService {
         var response = employeeClient.getEmployeeById(request.getEmployeeId());
         if (response == null || !response.getUserId().equals(request.getSubmittedBy())) {
             assert response != null;
-            throw new RuntimeException("Invalid clock-out request for employee" + response.getId());
+            throw new RuntimeException("Unauthorized clock-out attempt");
         }
 
         attendanceRecord.setCheckoutAddress(request.getAddress());

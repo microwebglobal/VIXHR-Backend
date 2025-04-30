@@ -41,8 +41,6 @@ public class AttendanceRecord extends Auditable {
 
     @NotNull
     private LocalTime checkInTime;
-
-    @NotNull
     private LocalTime checkOutTime;
 
     private double checkInLongitude;
@@ -62,10 +60,10 @@ public class AttendanceRecord extends Auditable {
     @Length(min = 2, max = 100)
     private String checkoutDeviceId;
 
-    @Length(min = 45, max = 45)
+    @Length(min = 7, max = 45)
     private String checkInIp;
 
-    @Length(min = 45, max = 45)
+    @Length(min = 7, max = 45)
     private String checkoutIp;
 
     @NotNull

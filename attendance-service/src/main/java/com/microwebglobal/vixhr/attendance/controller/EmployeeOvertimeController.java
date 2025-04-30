@@ -8,9 +8,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -57,24 +58,26 @@ public class EmployeeOvertimeController {
     @PostMapping("/clock-in")
     public void clockIn (
             HttpServletRequest httpRequest,
+            @AuthenticationPrincipal Jwt token,
             @RequestBody OvertimeClockRequest request,
-            Principal principal
+            @RequestHeader("User-Agent") String deviceId
     ) {
+        request.setDeviceId(deviceId);
         request.setIpAddress(httpRequest.getRemoteAddr());
-        request.setDeviceId(httpRequest.getRemoteHost());
-        request.setSubmittedBy(principal.getName());
+        request.setSubmittedBy(token.getClaimAsString("userId"));
         employeeOvertimeService.clockIn(request);
     }
 
     @PostMapping("/clock-out")
     public void clockOut (
             HttpServletRequest httpRequest,
+            @AuthenticationPrincipal Jwt token,
             @RequestBody OvertimeClockRequest request,
-            Principal principal
+            @RequestHeader("User-Agent") String deviceId
     ) {
         request.setIpAddress(httpRequest.getRemoteAddr());
-        request.setDeviceId(httpRequest.getRemoteHost());
-        request.setSubmittedBy(principal.getName());
+        request.setDeviceId(deviceId);
+        request.setSubmittedBy(token.getClaimAsString("userId"));
         employeeOvertimeService.clockOut(request);
     }
 }
