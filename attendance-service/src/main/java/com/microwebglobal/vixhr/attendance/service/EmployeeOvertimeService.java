@@ -9,6 +9,7 @@ import com.microwebglobal.vixhr.attendance.repository.OvertimeClockEventReposito
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -20,8 +21,19 @@ public class EmployeeOvertimeService {
     private final OvertimeClockEventRepository overtimeClockEventRepository;
     private final EmployeeOvertimeRepository employeeOvertimeRepository;
 
-    public List<EmployeeOvertime> getOvertimeRecordsByEmployeeId(Long employeeId) {
-        return employeeOvertimeRepository.findAllByEmployeeId(employeeId);
+    public List<EmployeeOvertime> getOvertimeRecordsByCompanyId(
+            Long companyId,
+            LocalDate startDate,
+            LocalDate endDate
+    ) {
+        return employeeOvertimeRepository.findAllByCompanyIdAndDateBetween(companyId, startDate, endDate);
+    }
+
+    public List<EmployeeOvertime> getOvertimeRecordsByEmployeeId(
+            Long employeeId,
+            LocalDate startDate,
+            LocalDate endDate) {
+        return employeeOvertimeRepository.findAllByEmployeeIdAndDateBetween(employeeId, startDate, endDate);
     }
 
     public List<OvertimeClockEvent> getOvertimeClockEventsByEmployeeId(Long employeeId) {

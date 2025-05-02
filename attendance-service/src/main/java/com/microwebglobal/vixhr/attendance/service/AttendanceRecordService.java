@@ -18,8 +18,20 @@ public class AttendanceRecordService {
     private final EmployeeClient employeeClient;
     private final AttendanceRecordRepository attendanceRecordRepository;
 
-    public List<AttendanceRecord> getAttendanceByEmployeeId(Long employeeId) {
-        return attendanceRecordRepository.findAllByEmployeeId(employeeId);
+    public List<AttendanceRecord> getAttendanceByCompanyId(
+            Long companyId,
+            LocalDate startDate,
+            LocalDate endDate
+    ) {
+        return attendanceRecordRepository.findAllByCompanyIdAndDateBetween(companyId, startDate, endDate);
+    }
+
+    public List<AttendanceRecord> getAttendanceByEmployeeId(
+            Long employeeId,
+            LocalDate startDate,
+            LocalDate endDate
+    ) {
+        return attendanceRecordRepository.findAllByEmployeeIdAndDateBetween(employeeId, startDate, endDate);
     }
 
     public AttendanceRecord getAttendanceRecordById(Long id) {
@@ -55,6 +67,7 @@ public class AttendanceRecordService {
 
         var attendanceRecord = AttendanceRecord.builder()
                 .employeeId(request.getEmployeeId())
+                .companyId(response.getCompanyId())
                 .checkInAddress(request.getAddress())
                 .checkInDeviceId(request.getDeviceId())
                 .checkInIp(request.getIpAddress())

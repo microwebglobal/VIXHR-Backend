@@ -36,6 +36,10 @@ public class AttendanceRecord extends Auditable {
     private Long employeeId;
 
     @NotNull
+    @Column(name = "company_id", nullable = false)
+    private Long companyId;
+
+    @NotNull
     @Column(name = "date", nullable = false)
     private LocalDate date;
 

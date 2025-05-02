@@ -31,6 +31,9 @@ public class EmployeeOvertime extends Auditable {
     private Long employeeId;
 
     @NotNull
+    private Long companyId;
+
+    @NotNull
     private Long overtimePolicyId;
 
     @NotNull

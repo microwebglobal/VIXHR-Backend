@@ -4,14 +4,19 @@ import com.microwebglobal.vixhr.attendance.dto.OvertimeClockRequest;
 import com.microwebglobal.vixhr.attendance.model.EmployeeOvertime;
 import com.microwebglobal.vixhr.attendance.model.OvertimeClockEvent;
 import com.microwebglobal.vixhr.attendance.service.EmployeeOvertimeService;
+import com.microwebglobal.vixhr.attendance.util.OvertimeReportGenerator;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -20,7 +25,33 @@ import java.util.List;
 @SecurityRequirement(name = "oauth")
 public class EmployeeOvertimeController {
 
+    private final OvertimeReportGenerator reportGenerator;
     private final EmployeeOvertimeService employeeOvertimeService;
+
+    @GetMapping("/export")
+    public void exportAttendance(
+            HttpServletResponse response,
+            @RequestParam(required = false) Long companyId,
+            @RequestParam(required = false) Long employeeId,
+            @RequestParam(defaultValue = "excel") String format,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate
+    ) throws IOException {
+        List<EmployeeOvertime> records = companyId != null
+                ? employeeOvertimeService.getOvertimeRecordsByCompanyId(companyId, startDate, endDate)
+                : employeeOvertimeService.getOvertimeRecordsByEmployeeId(employeeId, startDate, endDate);
+
+        if (records.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            return;
+        }
+
+        if (format.equalsIgnoreCase("csv")) {
+            reportGenerator.exportToCsv(records, response);
+        } else {
+            reportGenerator.exportToExcel(records, response);
+        }
+    }
 
     @GetMapping("/events/employee/{employeeId}")
     public List<OvertimeClockEvent> getOvertimeClockEventsByEmployeeId(@PathVariable Long employeeId) {
@@ -28,8 +59,12 @@ public class EmployeeOvertimeController {
     }
 
     @GetMapping("/employee/{employeeId}")
-    public List<EmployeeOvertime> getOvertimeRecordsByEmployeeId(@PathVariable Long employeeId) {
-        return employeeOvertimeService.getOvertimeRecordsByEmployeeId(employeeId);
+    public List<EmployeeOvertime> getOvertimeRecordsByEmployeeId(
+            @PathVariable Long employeeId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        return employeeOvertimeService.getOvertimeRecordsByEmployeeId(employeeId, startDate, endDate);
     }
 
     @GetMapping("/{id}")
@@ -75,8 +110,8 @@ public class EmployeeOvertimeController {
             @RequestBody OvertimeClockRequest request,
             @RequestHeader("User-Agent") String deviceId
     ) {
-        request.setIpAddress(httpRequest.getRemoteAddr());
         request.setDeviceId(deviceId);
+        request.setIpAddress(httpRequest.getRemoteAddr());
         request.setSubmittedBy(token.getClaimAsString("userId"));
         employeeOvertimeService.clockOut(request);
     }

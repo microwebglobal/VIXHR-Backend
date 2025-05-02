@@ -3,15 +3,20 @@ package com.microwebglobal.vixhr.attendance.controller;
 import com.microwebglobal.vixhr.attendance.dto.AttendanceRequest;
 import com.microwebglobal.vixhr.attendance.model.AttendanceRecord;
 import com.microwebglobal.vixhr.attendance.service.AttendanceRecordService;
+import com.microwebglobal.vixhr.attendance.util.AttendanceReportGenerator;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -21,10 +26,40 @@ import java.util.List;
 public class AttendanceRecordController {
 
     private final AttendanceRecordService attendanceRecordService;
+    private final AttendanceReportGenerator attendanceReportGenerator;
+
+    @GetMapping("/export")
+    public void exportAttendance(
+            HttpServletResponse response,
+            @RequestParam(required = false) Long companyId,
+            @RequestParam(required = false) Long employeeId,
+            @RequestParam(defaultValue = "excel") String format,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate
+    ) throws IOException {
+        List<AttendanceRecord> records = companyId != null
+                ? attendanceRecordService.getAttendanceByCompanyId(companyId, startDate, endDate)
+                : attendanceRecordService.getAttendanceByEmployeeId(employeeId, startDate, endDate);
+
+        if (records.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            return;
+        }
+
+        if (format.equalsIgnoreCase("csv")) {
+            attendanceReportGenerator.exportToCsv(records, response);
+        } else {
+            attendanceReportGenerator.exportToExcel(records, response);
+        }
+    }
 
     @GetMapping("/employee/{employeeId}")
-    public List<AttendanceRecord> getAttendanceByEmployee(@PathVariable Long employeeId) {
-        return attendanceRecordService.getAttendanceByEmployeeId(employeeId);
+    public List<AttendanceRecord> getAttendanceByEmployee(
+            @PathVariable Long employeeId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate
+    ) {
+        return attendanceRecordService.getAttendanceByEmployeeId(employeeId, startDate, endDate);
     }
 
     @GetMapping("/{id}")

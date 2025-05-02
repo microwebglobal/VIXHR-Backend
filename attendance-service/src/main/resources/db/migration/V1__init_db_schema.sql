@@ -4,6 +4,7 @@ CREATE TABLE attendance_records
     created_at         TIMESTAMP WITHOUT TIME ZONE,
     updated_at         TIMESTAMP WITHOUT TIME ZONE,
     employee_id        BIGINT                                  NOT NULL,
+    company_id         BIGINT                                  NOT NULL,
     date               date                                    NOT NULL,
     check_in_time      time WITHOUT TIME ZONE                  NOT NULL,
     check_out_time     time WITHOUT TIME ZONE,
@@ -30,6 +31,7 @@ CREATE TABLE employee_overtime
     created_at         TIMESTAMP WITHOUT TIME ZONE,
     updated_at         TIMESTAMP WITHOUT TIME ZONE,
     employee_id        BIGINT                                  NOT NULL,
+    company_id         BIGINT                                  NOT NULL,
     overtime_policy_id BIGINT                                  NOT NULL,
     date               date                                    NOT NULL,
     start_time         time WITHOUT TIME ZONE                  NOT NULL,
@@ -75,11 +77,11 @@ CREATE TABLE overtime_clock_events
     location_verified     BOOLEAN                                 NOT NULL,
     geo_fence_location_id BIGINT                                  NOT NULL,
     notes                 VARCHAR(500),
-    CONSTRAINT pk_overtimeclockevents PRIMARY KEY (id)
+    CONSTRAINT pk_overtime_clock_events PRIMARY KEY (id)
 );
 
 ALTER TABLE attendance_records
     ADD CONSTRAINT uc_2d59693229e685c17daefd1b2 UNIQUE (employee_id, date);
 
 ALTER TABLE overtime_clock_events
-    ADD CONSTRAINT FK_OVERTIMECLOCKEVENTs_ON_GEO_FENCE_LOCATION FOREIGN KEY (geo_fence_location_id) REFERENCES geofence_locations (id);
+    ADD CONSTRAINT FK_OVERTIME_CLOCK_EVENTS_ON_GEO_FENCE_LOCATION FOREIGN KEY (geo_fence_location_id) REFERENCES geofence_locations (id);

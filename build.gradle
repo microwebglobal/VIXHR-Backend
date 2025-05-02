@@ -123,6 +123,8 @@ project(':attendance-service') {
         implementation 'org.springframework.kafka:spring-kafka'
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
         runtimeOnly 'org.postgresql:postgresql'
+        implementation 'org.apache.poi:poi:5.4.1'
+        implementation 'org.apache.poi:poi-ooxml:5.4.1'
         implementation("org.flywaydb:flyway-database-postgresql")
         implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
         implementation project(':common')
