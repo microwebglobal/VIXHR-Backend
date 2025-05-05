@@ -24,6 +24,11 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
 
 eureka:
   client:
@@ -36,3 +41,14 @@ eureka:
     hostname: localhost
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
     lease-renewal-interval-in-seconds: 30
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    oauth:
+      client-id: test-client
+      client-secret: secret
+  oAuthFlow:
+    tokenUrl: http://localhost:8081/oauth2/token
