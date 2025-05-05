@@ -38,7 +38,7 @@ public class AttendanceReportGenerator {
         for (AttendanceRecord record : records) {
             Row row = sheet.createRow(rowCount++);
             var employee = employeeClient.getEmployeeById(record.getEmployeeId());
-            String fullName = employee.getFirstName() + " " + employee.getLastName();
+            String fullName = employee.firstName() + " " + employee.lastName();
 
             int col = 0;
             ReportUtils.createStyledCell(row, col++, String.valueOf(record.getId()), workbook);
@@ -70,7 +70,7 @@ public class AttendanceReportGenerator {
 
         for (AttendanceRecord record : records) {
             var employee = employeeClient.getEmployeeById(record.getEmployeeId());
-            String fullName = employee.getFirstName() + " " + employee.getLastName();
+            String fullName = employee.firstName() + " " + employee.lastName();
 
             writer.printf("%d,%s,%s,%s,%s,%s,%s,%.2f,%s%n",
                     record.getId(),

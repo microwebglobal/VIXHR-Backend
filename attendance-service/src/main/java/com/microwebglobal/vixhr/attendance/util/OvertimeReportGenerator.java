@@ -38,10 +38,10 @@ public class OvertimeReportGenerator {
         for (EmployeeOvertime record : records) {
             Row row = sheet.createRow(rowCount++);
             EmployeeResponse emp = employeeClient.getEmployeeById(record.getEmployeeId());
-            String fullName = emp.getFirstName() + " " + emp.getLastName();
+            String fullName = emp.firstName() + " " + emp.lastName();
 
             EmployeeResponse approvedBy = employeeClient.getEmployeeById(record.getApprovedBy());
-            String approvedByName = approvedBy.getFirstName() + " " + approvedBy.getLastName();
+            String approvedByName = approvedBy.firstName() + " " + approvedBy.lastName();
 
             int col = 0;
             ReportUtils.createStyledCell(row, col++, String.valueOf(record.getId()), workbook);
@@ -76,7 +76,7 @@ public class OvertimeReportGenerator {
 
         for (EmployeeOvertime record : records) {
             EmployeeResponse emp = employeeClient.getEmployeeById(record.getEmployeeId());
-            String fullName = emp.getFirstName() + " " + emp.getLastName();
+            String fullName = emp.firstName() + " " + emp.lastName();
 
             writer.printf("%d,%s,%s,%s,%s,%.2f,%.2f,%s,%s,%s,%s%n",
                     record.getId(),

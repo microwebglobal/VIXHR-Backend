@@ -66,9 +66,9 @@ public class EmployeeOvertimeService {
 
     public void clockIn(OvertimeClockRequest request) {
         var response = employeeClient.getEmployeeById(request.getEmployeeId());
-        if (response == null || !response.getUserId().equals(request.getSubmittedBy())) {
+        if (response == null || !response.userId().equals(request.getSubmittedBy())) {
             assert response != null;
-            throw new RuntimeException("Invalid clock-in request for employee" + response.getId());
+            throw new RuntimeException("Invalid clock-in request for employee" + response.id());
         }
 
         var clockEvent = OvertimeClockEvent.builder()
@@ -86,9 +86,9 @@ public class EmployeeOvertimeService {
 
     public void clockOut(OvertimeClockRequest request) {
         var response = employeeClient.getEmployeeById(request.getEmployeeId());
-        if (response == null || !response.getUserId().equals(request.getSubmittedBy())) {
+        if (response == null || !response.userId().equals(request.getSubmittedBy())) {
             assert response != null;
-            throw new RuntimeException("Invalid clock-out request for employee" + response.getId());
+            throw new RuntimeException("Invalid clock-out request for employee" + response.id());
         }
 
         var clockEvent = OvertimeClockEvent.builder()

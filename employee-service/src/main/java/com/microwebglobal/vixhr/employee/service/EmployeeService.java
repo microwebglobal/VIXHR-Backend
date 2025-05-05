@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.employee.service;
 
+import com.microwebglobal.vixhr.common.events.EmployeeUpdatedEvent;
 import com.microwebglobal.vixhr.employee.client.CompanyClient;
 import com.microwebglobal.vixhr.employee.dto.employee.EmployeeRequest;
 import com.microwebglobal.vixhr.employee.model.Employee;
@@ -7,6 +8,7 @@ import com.microwebglobal.vixhr.employee.repository.DepartmentRepository;
 import com.microwebglobal.vixhr.employee.repository.EmployeeRepository;
 import com.microwebglobal.vixhr.employee.repository.JobRoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +19,7 @@ public class EmployeeService {
     private final JobRoleRepository jobRoleRepository;
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
+    private final KafkaTemplate<String, EmployeeUpdatedEvent> kafka;
 
     public Employee createEmployee(EmployeeRequest request) {
         var employee = request.toEmployee();
@@ -62,7 +65,20 @@ public class EmployeeService {
         employee.setId(id);
         employee.setJobRole(jobRole);
         employee.setDepartment(department);
-        return employeeRepository.save(employee);
+        var saved = employeeRepository.save(employee);
+
+        EmployeeUpdatedEvent ev = new EmployeeUpdatedEvent(
+                saved.getId(),
+                saved.getCompanyId(),
+                saved.getEmployeeCode(),
+                saved.getFirstName() + " " + saved.getLastName(),
+                saved.getDepartment().getName(),
+                saved.getJobRole().getTitle(),
+                saved.getBaseSalary()
+        );
+
+        kafka.send("employee.updated", ev);
+        return saved;
     }
 
     public void deleteEmployee(Long id) {

@@ -4,7 +4,9 @@ import com.microwebglobal.vixhr.attendance.client.EmployeeClient;
 import com.microwebglobal.vixhr.attendance.dto.AttendanceRequest;
 import com.microwebglobal.vixhr.attendance.model.AttendanceRecord;
 import com.microwebglobal.vixhr.attendance.repository.AttendanceRecordRepository;
+import com.microwebglobal.vixhr.common.events.AttendanceRecordedEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,6 +18,7 @@ import java.util.List;
 public class AttendanceRecordService {
 
     private final EmployeeClient employeeClient;
+    private final KafkaTemplate<String, AttendanceRecordedEvent> kafka;
     private final AttendanceRecordRepository attendanceRecordRepository;
 
     public List<AttendanceRecord> getAttendanceByCompanyId(
@@ -59,15 +62,15 @@ public class AttendanceRecordService {
     }
 
     public void clockIn(AttendanceRequest request) {
-        var response = employeeClient.getEmployeeById(request.getEmployeeId());
-        if (response == null || !response.getUserId().equals(request.getSubmittedBy())) {
-            assert response != null;
+        var employeeResponse = employeeClient.getEmployeeById(request.getEmployeeId());
+        if (employeeResponse == null || !employeeResponse.userId().equals(request.getSubmittedBy())) {
+            assert employeeResponse != null;
             throw new RuntimeException("Unauthorized clock-in attempt");
         }
 
         var attendanceRecord = AttendanceRecord.builder()
                 .employeeId(request.getEmployeeId())
-                .companyId(response.getCompanyId())
+                .companyId(employeeResponse.companyId())
                 .checkInAddress(request.getAddress())
                 .checkInDeviceId(request.getDeviceId())
                 .checkInIp(request.getIpAddress())
@@ -84,9 +87,9 @@ public class AttendanceRecordService {
                 .findByEmployeeIdAndDate(request.getEmployeeId(), LocalDate.now())
                 .orElseThrow(() -> new RuntimeException("Attendance record not found for employee ID: " + request.getEmployeeId()));
 
-        var response = employeeClient.getEmployeeById(request.getEmployeeId());
-        if (response == null || !response.getUserId().equals(request.getSubmittedBy())) {
-            assert response != null;
+        var employeeResponse = employeeClient.getEmployeeById(request.getEmployeeId());
+        if (employeeResponse == null || !employeeResponse.userId().equals(request.getSubmittedBy())) {
+            assert employeeResponse != null;
             throw new RuntimeException("Unauthorized clock-out attempt");
         }
 
@@ -95,6 +98,24 @@ public class AttendanceRecordService {
         attendanceRecord.setCheckoutIp(request.getIpAddress());
         attendanceRecord.setCheckOutTime(LocalTime.now());
 
-        attendanceRecordRepository.save(attendanceRecord);
+        var record = attendanceRecordRepository.save(attendanceRecord);
+
+        var ev = new AttendanceRecordedEvent(
+                record.getId(),
+                employeeResponse.id(),
+                employeeResponse.companyId(),
+                employeeResponse.employeeCode(),
+                employeeResponse.firstName() + " " + employeeResponse.lastName(),
+                employeeResponse.department().name(),
+                employeeResponse.jobRole().title(),
+                employeeResponse.baseSalary(),
+                record.getDate(),
+                record.getCheckInTime(),
+                record.getCheckOutTime(),
+                record.getStatus(),
+                record.getNotes()
+        );
+
+        kafka.send("attendance.recorded", ev);
     }
 }
