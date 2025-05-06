@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.reporting.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.microwebglobal.vixhr.common.Auditable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
@@ -15,7 +16,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(
-        name = "attendance_reports",
+        name = "attendance_records",
         indexes = {
                 @Index(name = "idx_report_company_date", columnList = "companyId, date"),
                 @Index(name = "idx_report_employee_date", columnList = "employeeId, date"),
@@ -23,7 +24,7 @@ import java.time.LocalTime;
                 @Index(name = "idx_report_status", columnList = "status")
         }
 )
-public class AttendanceReport extends Auditable {
+public class AttendanceRecord extends Auditable {
 
     @Id
     private Long attendanceId;
@@ -68,4 +69,8 @@ public class AttendanceReport extends Auditable {
 
     @Column(length = 200)
     private String notes;
+
+    @JsonIgnore
+    @Column(length = 25)
+    private String recordStatus;
 }

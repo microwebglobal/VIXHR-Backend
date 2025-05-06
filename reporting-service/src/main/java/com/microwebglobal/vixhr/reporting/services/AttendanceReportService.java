@@ -1,8 +1,8 @@
 package com.microwebglobal.vixhr.reporting.services;
 
-import com.microwebglobal.vixhr.reporting.dto.AttendanceReportResponse;
-import com.microwebglobal.vixhr.reporting.models.AttendanceReport;
-import com.microwebglobal.vixhr.reporting.repositories.ReportRepository;
+import com.microwebglobal.vixhr.reporting.dto.AttendanceRecordResponse;
+import com.microwebglobal.vixhr.reporting.models.AttendanceRecord;
+import com.microwebglobal.vixhr.reporting.repositories.AttendanceRecordRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,48 +16,48 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AttendanceReportService {
 
-    private final ReportRepository reportRepository;
+    private final AttendanceRecordRepository attendanceRecordRepository;
 
-    public Page<AttendanceReportResponse> getPaginatedByCompanyId(
+    public Page<AttendanceRecordResponse> getPaginatedByCompanyId(
             Long companyId,
             LocalDate startDate,
             LocalDate endDate,
             Pageable pageable
     ) {
-        return reportRepository.findAllByCompanyIdAndDateBetween(companyId, startDate, endDate, pageable)
-                .map(AttendanceReportResponse::from);
+        return attendanceRecordRepository.findAllByCompanyIdAndDateBetween(companyId, startDate, endDate, pageable)
+                .map(AttendanceRecordResponse::from);
     }
 
-    public Page<AttendanceReportResponse> getPaginatedByEmployeeId(
+    public Page<AttendanceRecordResponse> getPaginatedByEmployeeId(
             Long employeeId,
             LocalDate startDate,
             LocalDate endDate,
             Pageable pageable
     ) {
-        return reportRepository.findAllByEmployeeIdAndDateBetween(employeeId, startDate, endDate, pageable)
-                .map(AttendanceReportResponse::from);
+        return attendanceRecordRepository.findAllByEmployeeIdAndDateBetween(employeeId, startDate, endDate, pageable)
+                .map(AttendanceRecordResponse::from);
     }
 
-    public List<AttendanceReport> getAllByCompanyId(Long companyId, LocalDate startDate, LocalDate endDate) {
-        return reportRepository.findAllByCompanyIdAndDateBetween(companyId, startDate, endDate);
+    public List<AttendanceRecord> getAllByCompanyId(Long companyId, LocalDate startDate, LocalDate endDate) {
+        return attendanceRecordRepository.findAllByCompanyIdAndDateBetween(companyId, startDate, endDate);
     }
 
-    public List<AttendanceReport> getAllByEmployeeId(Long employeeId, LocalDate startDate, LocalDate endDate) {
-        return reportRepository.findAllByEmployeeIdAndDateBetween(employeeId, startDate, endDate);
+    public List<AttendanceRecord> getAllByEmployeeId(Long employeeId, LocalDate startDate, LocalDate endDate) {
+        return attendanceRecordRepository.findAllByEmployeeIdAndDateBetween(employeeId, startDate, endDate);
     }
 
     public void deleteAllByEmployeeId(Long employeeId) {
-        reportRepository.deleteAllByEmployeeId(employeeId);
+        attendanceRecordRepository.deleteAllByEmployeeId(employeeId);
     }
 
     public void deleteAllByCompanyId(Long companyId) {
-        reportRepository.deleteAllByCompanyId(companyId);
+        attendanceRecordRepository.deleteAllByCompanyId(companyId);
     }
 
     public void deleteById(Long id) {
-        if (!reportRepository.existsById(id)) {
+        if (!attendanceRecordRepository.existsById(id)) {
             throw new EntityNotFoundException("Attendance report not found");
         }
-        reportRepository.deleteById(id);
+        attendanceRecordRepository.deleteById(id);
     }
 }

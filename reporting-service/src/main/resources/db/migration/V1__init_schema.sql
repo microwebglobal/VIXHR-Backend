@@ -1,4 +1,4 @@
-CREATE TABLE attendance_reports
+CREATE TABLE attendance_records
 (
     attendance_id   BIGINT           NOT NULL,
     created_at      TIMESTAMP WITHOUT TIME ZONE,
@@ -19,13 +19,14 @@ CREATE TABLE attendance_reports
     overtime_rate   DOUBLE PRECISION,
     overtime_status VARCHAR(50),
     notes           VARCHAR(200),
-    CONSTRAINT pk_attendance_reports PRIMARY KEY (attendance_id)
+    record_status   VARCHAR(25),
+    CONSTRAINT pk_attendance_records PRIMARY KEY (attendance_id)
 );
 
-CREATE INDEX idx_report_company_date ON attendance_reports (company_id, date);
+CREATE INDEX idx_report_company_date ON attendance_records (company_id, date);
 
-CREATE INDEX idx_report_date ON attendance_reports (date);
+CREATE INDEX idx_report_date ON attendance_records (date);
 
-CREATE INDEX idx_report_employee_date ON attendance_reports (employee_id, date);
+CREATE INDEX idx_report_employee_date ON attendance_records (employee_id, date);
 
-CREATE INDEX idx_report_status ON attendance_reports (status);
+CREATE INDEX idx_report_status ON attendance_records (status);
