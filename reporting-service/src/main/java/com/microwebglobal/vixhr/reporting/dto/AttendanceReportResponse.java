@@ -16,7 +16,6 @@ public class AttendanceReportResponse {
     private Long employeeId;
     private String employeeCode;
     private String fullName;
-    private String email;
     private String department;
     private String jobRole;
 
@@ -28,7 +27,6 @@ public class AttendanceReportResponse {
     private double overtimeHours;
     private String notes;
 
-    // Static mapper from Entity
     public static AttendanceReportResponse from(AttendanceReport entity) {
         return AttendanceReportResponse.builder()
                 .reportId(entity.getAttendanceId())

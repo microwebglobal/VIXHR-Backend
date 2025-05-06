@@ -36,6 +36,7 @@ public class ReportController {
     public ResponseEntity<Resource> exportAttendanceReports(
             @RequestParam(required = false) Long companyId,
             @RequestParam(required = false) Long employeeId,
+            @RequestParam(defaultValue = "excel") String format,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     ) throws IOException {
@@ -43,14 +44,24 @@ public class ReportController {
                 ? reportService.getAllByCompanyId(companyId, startDate, endDate)
                 : reportService.getAllByEmployeeId(employeeId, startDate, endDate);
 
-        ByteArrayInputStream in = reportGenerator.exportToExcel(reports);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=attendance_reports.xlsx");
+        ByteArrayInputStream stream;
+        String filename;
+        MediaType mediaType;
+
+        if ("csv".equalsIgnoreCase(format)) {
+            stream = reportGenerator.exportToCsv(reports);
+            filename = "attendance-report-" + startDate + "-to-" + endDate + ".csv";
+            mediaType = MediaType.TEXT_PLAIN;
+        } else {
+            stream = reportGenerator.exportToExcel(reports);
+            filename = "attendance-report-" + startDate + "-to-" + endDate + ".xlsx";
+            mediaType = MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        }
 
         return ResponseEntity.ok()
-                .headers(headers)
-                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                .body(new InputStreamResource(in));
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                .contentType(mediaType)
+                .body(new InputStreamResource(stream));
     }
 
     @GetMapping("/company")
