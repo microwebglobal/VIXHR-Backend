@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ReportConsumer {
+
     private final ReportRepository repository;
 
     @KafkaListener(topics="attendance.recorded", containerFactory="kafkaListenerContainerFactory")

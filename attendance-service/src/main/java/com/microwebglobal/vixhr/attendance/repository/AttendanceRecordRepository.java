@@ -9,8 +9,6 @@ import java.util.Optional;
 
 public interface AttendanceRecordRepository extends JpaRepository<AttendanceRecord, Long> {
 
-    List<AttendanceRecord> findAllByCompanyIdAndDateBetween(Long companyId, LocalDate startDate, LocalDate endDate);
-
     List<AttendanceRecord> findAllByEmployeeIdAndDateBetween(Long employeeId, LocalDate startDate, LocalDate endDate);
 
     Optional<AttendanceRecord> findByEmployeeIdAndDate(Long employeeId, LocalDate date);

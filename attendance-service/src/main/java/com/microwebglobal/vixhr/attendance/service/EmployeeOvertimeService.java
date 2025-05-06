@@ -21,14 +21,6 @@ public class EmployeeOvertimeService {
     private final OvertimeClockEventRepository overtimeClockEventRepository;
     private final EmployeeOvertimeRepository employeeOvertimeRepository;
 
-    public List<EmployeeOvertime> getOvertimeRecordsByCompanyId(
-            Long companyId,
-            LocalDate startDate,
-            LocalDate endDate
-    ) {
-        return employeeOvertimeRepository.findAllByCompanyIdAndDateBetween(companyId, startDate, endDate);
-    }
-
     public List<EmployeeOvertime> getOvertimeRecordsByEmployeeId(
             Long employeeId,
             LocalDate startDate,

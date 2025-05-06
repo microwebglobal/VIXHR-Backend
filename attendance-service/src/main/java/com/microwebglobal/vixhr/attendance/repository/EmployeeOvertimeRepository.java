@@ -8,7 +8,5 @@ import java.util.List;
 
 public interface EmployeeOvertimeRepository extends JpaRepository<EmployeeOvertime, Long> {
 
-    List<EmployeeOvertime> findAllByCompanyIdAndDateBetween(Long companyId, LocalDate startDate, LocalDate endDate);
-
     List<EmployeeOvertime> findAllByEmployeeIdAndDateBetween(Long employeeId, LocalDate startDate, LocalDate endDate);
 }

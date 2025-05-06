@@ -21,14 +21,6 @@ public class AttendanceRecordService {
     private final KafkaTemplate<String, AttendanceRecordedEvent> kafka;
     private final AttendanceRecordRepository attendanceRecordRepository;
 
-    public List<AttendanceRecord> getAttendanceByCompanyId(
-            Long companyId,
-            LocalDate startDate,
-            LocalDate endDate
-    ) {
-        return attendanceRecordRepository.findAllByCompanyIdAndDateBetween(companyId, startDate, endDate);
-    }
-
     public List<AttendanceRecord> getAttendanceByEmployeeId(
             Long employeeId,
             LocalDate startDate,
