@@ -1,7 +1,7 @@
 package com.microwebglobal.vixhr.reporting.controllers;
 
-import com.microwebglobal.vixhr.reporting.dto.AttendanceRecordResponse;
-import com.microwebglobal.vixhr.reporting.models.AttendanceRecord;
+import com.microwebglobal.vixhr.reporting.dto.ReportDataRecordResponse;
+import com.microwebglobal.vixhr.reporting.models.ReportDataRecord;
 import com.microwebglobal.vixhr.reporting.services.AttendanceReportService;
 import com.microwebglobal.vixhr.reporting.util.ReportGenerator;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -40,7 +40,7 @@ public class ReportController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     ) throws IOException {
-        List<AttendanceRecord> reports = companyId != null
+        List<ReportDataRecord> reports = companyId != null
                 ? reportService.getAllByCompanyId(companyId, startDate, endDate)
                 : reportService.getAllByEmployeeId(employeeId, startDate, endDate);
 
@@ -65,7 +65,7 @@ public class ReportController {
     }
 
     @GetMapping("/company")
-    public ResponseEntity<Page<AttendanceRecordResponse>> getAllByCompanyId(
+    public ResponseEntity<Page<ReportDataRecordResponse>> getAllByCompanyId(
             @RequestParam Long companyId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
@@ -78,7 +78,7 @@ public class ReportController {
     }
 
     @GetMapping("/employee")
-    public ResponseEntity<Page<AttendanceRecordResponse>> getAllByEmployeeId(
+    public ResponseEntity<Page<ReportDataRecordResponse>> getAllByEmployeeId(
             @RequestParam Long employeeId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,

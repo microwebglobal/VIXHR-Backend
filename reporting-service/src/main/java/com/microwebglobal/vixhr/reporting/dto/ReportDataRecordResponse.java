@@ -1,6 +1,6 @@
 package com.microwebglobal.vixhr.reporting.dto;
 
-import com.microwebglobal.vixhr.reporting.models.AttendanceRecord;
+import com.microwebglobal.vixhr.reporting.models.ReportDataRecord;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import java.time.LocalTime;
 
 @Data
 @Builder
-public class AttendanceRecordResponse {
+public class ReportDataRecordResponse {
 
     private Long reportId;
 
@@ -27,8 +27,8 @@ public class AttendanceRecordResponse {
     private double overtimeHours;
     private String notes;
 
-    public static AttendanceRecordResponse from(AttendanceRecord entity) {
-        return AttendanceRecordResponse.builder()
+    public static ReportDataRecordResponse from(ReportDataRecord entity) {
+        return ReportDataRecordResponse.builder()
                 .reportId(entity.getAttendanceId())
                 .employeeId(entity.getEmployeeId())
                 .employeeCode(entity.getEmployeeCode())

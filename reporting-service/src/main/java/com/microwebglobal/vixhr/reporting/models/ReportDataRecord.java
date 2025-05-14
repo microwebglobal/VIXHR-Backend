@@ -24,7 +24,7 @@ import java.time.LocalTime;
                 @Index(name = "idx_report_status", columnList = "status")
         }
 )
-public class AttendanceRecord extends Auditable {
+public class ReportDataRecord extends Auditable {
 
     @Id
     private Long attendanceId;

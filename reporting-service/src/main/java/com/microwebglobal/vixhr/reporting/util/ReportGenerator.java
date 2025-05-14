@@ -1,6 +1,6 @@
 package com.microwebglobal.vixhr.reporting.util;
 
-import com.microwebglobal.vixhr.reporting.models.AttendanceRecord;
+import com.microwebglobal.vixhr.reporting.models.ReportDataRecord;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class ReportGenerator {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    public ByteArrayInputStream exportToExcel(List<AttendanceRecord> reports) throws IOException {
+    public ByteArrayInputStream exportToExcel(List<ReportDataRecord> reports) throws IOException {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet("Attendance Reports");
 
@@ -35,7 +35,7 @@ public class ReportGenerator {
 
             // Data rows
             int rowIdx = 1;
-            for (AttendanceRecord report : reports) {
+            for (ReportDataRecord report : reports) {
                 Row row = sheet.createRow(rowIdx++);
                 populateRow(report, row);
             }
@@ -50,7 +50,7 @@ public class ReportGenerator {
         }
     }
 
-    public ByteArrayInputStream exportToCsv(List<AttendanceRecord> reports) throws IOException {
+    public ByteArrayInputStream exportToCsv(List<ReportDataRecord> reports) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
 
@@ -58,7 +58,7 @@ public class ReportGenerator {
         writer.write(String.join(",", HEADERS));
         writer.newLine();
 
-        for (AttendanceRecord report : reports) {
+        for (ReportDataRecord report : reports) {
             writer.write(toCsvRow(report));
             writer.newLine();
         }
@@ -67,7 +67,7 @@ public class ReportGenerator {
         return new ByteArrayInputStream(out.toByteArray());
     }
 
-    private void populateRow(AttendanceRecord report, Row row) {
+    private void populateRow(ReportDataRecord report, Row row) {
         row.createCell(0).setCellValue(report.getEmployeeId());
         row.createCell(1).setCellValue(report.getFullName());
         row.createCell(2).setCellValue(report.getEmployeeCode());
@@ -86,7 +86,7 @@ public class ReportGenerator {
         row.createCell(14).setCellValue(report.getNotes());
     }
 
-    private String toCsvRow(AttendanceRecord r) {
+    private String toCsvRow(ReportDataRecord r) {
         return String.join(",", List.of(
                 safe(r.getEmployeeId()),
                 safe(r.getFullName()),

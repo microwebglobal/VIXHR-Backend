@@ -2,8 +2,8 @@ package com.microwebglobal.vixhr.reporting.messaging;
 
 import com.microwebglobal.vixhr.common.events.AttendanceRecordedEvent;
 import com.microwebglobal.vixhr.common.events.OvertimeRecordedEvent;
-import com.microwebglobal.vixhr.reporting.models.AttendanceRecord;
-import com.microwebglobal.vixhr.reporting.repositories.AttendanceRecordRepository;
+import com.microwebglobal.vixhr.reporting.models.ReportDataRecord;
+import com.microwebglobal.vixhr.reporting.repositories.ReportDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReportConsumer {
 
-    private final AttendanceRecordRepository repository;
+    private final ReportDataRepository repository;
 
     @KafkaListener(topics="attendance.recorded", containerFactory="kafkaListenerContainerFactory")
     public void onAttendance(AttendanceRecordedEvent ev) {
-        AttendanceRecord report = AttendanceRecord.builder()
+        ReportDataRecord report = ReportDataRecord.builder()
                 .attendanceId(ev.attendanceId())
                 .employeeId(ev.employeeId())
                 .companyId(ev.companyId())
