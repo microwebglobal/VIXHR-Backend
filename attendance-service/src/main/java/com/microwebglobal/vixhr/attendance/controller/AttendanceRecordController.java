@@ -1,12 +1,15 @@
 package com.microwebglobal.vixhr.attendance.controller;
 
 import com.microwebglobal.vixhr.attendance.dto.AttendanceRequest;
+import com.microwebglobal.vixhr.attendance.dto.DataRequest;
 import com.microwebglobal.vixhr.attendance.model.AttendanceRecord;
 import com.microwebglobal.vixhr.attendance.service.AttendanceRecordService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,7 +17,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,12 +27,16 @@ public class AttendanceRecordController {
     private final AttendanceRecordService attendanceRecordService;
 
     @GetMapping("/employee/{employeeId}")
-    public List<AttendanceRecord> getAttendanceByEmployee(
+    public Page<AttendanceRecord> getAttendanceByEmployee(
             @PathVariable Long employeeId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
     ) {
-        return attendanceRecordService.getAttendanceByEmployeeId(employeeId, startDate, endDate);
+        var pageable = PageRequest.of(page, size);
+        var request = new DataRequest(employeeId, startDate, endDate, pageable);
+        return attendanceRecordService.getAttendanceByEmployeeId(request);
     }
 
     @GetMapping("/{id}")

@@ -20,3 +20,6 @@ eureka:
       defaultZone: http://discovery-service:8761/eureka/
   instance:
     hostname: employee-service
+
+server:
+  max-http-request-header-size: 10KB

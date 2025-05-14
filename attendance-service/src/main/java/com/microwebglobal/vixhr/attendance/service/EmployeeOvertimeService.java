@@ -1,17 +1,18 @@
 package com.microwebglobal.vixhr.attendance.service;
 
 import com.microwebglobal.vixhr.attendance.client.EmployeeClient;
+import com.microwebglobal.vixhr.attendance.dto.DataRequest;
 import com.microwebglobal.vixhr.attendance.dto.OvertimeClockRequest;
 import com.microwebglobal.vixhr.attendance.model.EmployeeOvertime;
 import com.microwebglobal.vixhr.attendance.model.OvertimeClockEvent;
 import com.microwebglobal.vixhr.attendance.repository.EmployeeOvertimeRepository;
 import com.microwebglobal.vixhr.attendance.repository.OvertimeClockEventRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,15 +22,22 @@ public class EmployeeOvertimeService {
     private final OvertimeClockEventRepository overtimeClockEventRepository;
     private final EmployeeOvertimeRepository employeeOvertimeRepository;
 
-    public List<EmployeeOvertime> getOvertimeRecordsByEmployeeId(
-            Long employeeId,
-            LocalDate startDate,
-            LocalDate endDate) {
-        return employeeOvertimeRepository.findAllByEmployeeIdAndDateBetween(employeeId, startDate, endDate);
+    public Page<EmployeeOvertime> getOvertimeRecordsByEmployeeId(DataRequest request) {
+        return employeeOvertimeRepository.findAllByEmployeeIdAndDateBetween(
+                request.getEmployeeId(),
+                request.getStartDate(),
+                request.getEndDate(),
+                request.getPageable()
+        );
     }
 
-    public List<OvertimeClockEvent> getOvertimeClockEventsByEmployeeId(Long employeeId) {
-        return overtimeClockEventRepository.findAllByEmployeeId(employeeId);
+    public Page<OvertimeClockEvent> getOvertimeClockEventsByEmployeeId(DataRequest request) {
+        return overtimeClockEventRepository.findAllByEmployeeIdAndDateBetween(
+                request.getEmployeeId(),
+                request.getStartDate(),
+                request.getEndDate(),
+                request.getPageable()
+        );
     }
 
     public EmployeeOvertime getOvertimeRecordById(Long id) {
@@ -69,6 +77,7 @@ public class EmployeeOvertimeService {
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
                 .eventTime(LocalTime.now())
+                .date(LocalDate.now())
                 .notes(request.getNotes())
                 .eventType("IN")
                 .build();
@@ -89,6 +98,7 @@ public class EmployeeOvertimeService {
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
                 .eventTime(LocalTime.now())
+                .date(LocalDate.now())
                 .notes(request.getNotes())
                 .eventType("OUT")
                 .build();

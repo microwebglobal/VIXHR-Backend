@@ -6,6 +6,9 @@ import com.microwebglobal.vixhr.employee.service.EmployeeService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,17 @@ public class EmployeeController {
     public ResponseEntity<Employee> createEmployee(@RequestBody @Valid EmployeeRequest request) {
         Employee createdEmployee = employeeService.createEmployee(request);
         return new ResponseEntity<>(createdEmployee, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/company/{companyId}")
+    public ResponseEntity<Page<Employee>> getEmployeeByCompanyId(
+            @PathVariable Long companyId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Employee> data = employeeService.getEmployeesByCompanyId(companyId, pageable);
+        return ResponseEntity.ok(data);
     }
 
     @GetMapping("/{id}")

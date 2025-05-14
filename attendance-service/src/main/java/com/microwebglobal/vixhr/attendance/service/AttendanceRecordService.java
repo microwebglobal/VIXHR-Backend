@@ -2,16 +2,17 @@ package com.microwebglobal.vixhr.attendance.service;
 
 import com.microwebglobal.vixhr.attendance.client.EmployeeClient;
 import com.microwebglobal.vixhr.attendance.dto.AttendanceRequest;
+import com.microwebglobal.vixhr.attendance.dto.DataRequest;
 import com.microwebglobal.vixhr.attendance.model.AttendanceRecord;
 import com.microwebglobal.vixhr.attendance.repository.AttendanceRecordRepository;
 import com.microwebglobal.vixhr.common.events.AttendanceRecordedEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,12 +22,13 @@ public class AttendanceRecordService {
     private final KafkaTemplate<String, AttendanceRecordedEvent> kafka;
     private final AttendanceRecordRepository attendanceRecordRepository;
 
-    public List<AttendanceRecord> getAttendanceByEmployeeId(
-            Long employeeId,
-            LocalDate startDate,
-            LocalDate endDate
-    ) {
-        return attendanceRecordRepository.findAllByEmployeeIdAndDateBetween(employeeId, startDate, endDate);
+    public Page<AttendanceRecord> getAttendanceByEmployeeId(DataRequest request) {
+        return attendanceRecordRepository.findAllByEmployeeIdAndDateBetween(
+                request.getEmployeeId(),
+                request.getStartDate(),
+                request.getEndDate(),
+                request.getPageable()
+        );
     }
 
     public AttendanceRecord getAttendanceRecordById(Long id) {

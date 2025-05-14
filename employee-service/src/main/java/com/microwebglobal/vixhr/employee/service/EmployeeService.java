@@ -8,6 +8,8 @@ import com.microwebglobal.vixhr.employee.repository.DepartmentRepository;
 import com.microwebglobal.vixhr.employee.repository.EmployeeRepository;
 import com.microwebglobal.vixhr.employee.repository.JobRoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,10 @@ public class EmployeeService {
         employee.setJobRole(jobRole);
         employee.setDepartment(department);
         return employeeRepository.save(employee);
+    }
+
+    public Page<Employee> getEmployeesByCompanyId(Long companyId, Pageable request) {
+        return employeeRepository.findAllByCompanyId(companyId, request);
     }
 
     public Employee getEmployeeById(Long id) {

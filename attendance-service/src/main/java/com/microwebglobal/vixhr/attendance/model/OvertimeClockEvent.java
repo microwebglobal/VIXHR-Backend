@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
@@ -33,6 +34,9 @@ public class OvertimeClockEvent extends Auditable {
     @NotNull
     @Length(min = 2, max = 10)
     private String eventType;
+
+    @NotNull
+    private LocalDate date;
 
     @NotNull
     @JsonFormat(pattern = "HH:mm:ss")

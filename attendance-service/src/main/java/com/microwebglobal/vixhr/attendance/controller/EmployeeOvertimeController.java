@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.attendance.controller;
 
+import com.microwebglobal.vixhr.attendance.dto.DataRequest;
 import com.microwebglobal.vixhr.attendance.dto.OvertimeClockRequest;
 import com.microwebglobal.vixhr.attendance.model.EmployeeOvertime;
 import com.microwebglobal.vixhr.attendance.model.OvertimeClockEvent;
@@ -8,13 +9,15 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,17 +28,29 @@ public class EmployeeOvertimeController {
     private final EmployeeOvertimeService employeeOvertimeService;
 
     @GetMapping("/events/employee/{employeeId}")
-    public List<OvertimeClockEvent> getOvertimeClockEventsByEmployeeId(@PathVariable Long employeeId) {
-        return employeeOvertimeService.getOvertimeClockEventsByEmployeeId(employeeId);
+    public Page<OvertimeClockEvent> getOvertimeClockEventsByEmployeeId(
+            @PathVariable Long employeeId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        var pageable = PageRequest.of(page, size);
+        var request = new DataRequest(employeeId, startDate, endDate, pageable);
+        return employeeOvertimeService.getOvertimeClockEventsByEmployeeId(request);
     }
 
     @GetMapping("/employee/{employeeId}")
-    public List<EmployeeOvertime> getOvertimeRecordsByEmployeeId(
+    public Page<EmployeeOvertime> getOvertimeRecordsByEmployeeId(
             @PathVariable Long employeeId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
     ) {
-        return employeeOvertimeService.getOvertimeRecordsByEmployeeId(employeeId, startDate, endDate);
+        Pageable pageable = PageRequest.of(page, size);
+        var request = new DataRequest(employeeId, startDate, endDate, pageable);
+        return employeeOvertimeService.getOvertimeRecordsByEmployeeId(request);
     }
 
     @GetMapping("/{id}")
