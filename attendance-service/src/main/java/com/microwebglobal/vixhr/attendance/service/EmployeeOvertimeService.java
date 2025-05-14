@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.attendance.service;
 
+import com.microwebglobal.vixhr.attendance.client.CompanyClient;
 import com.microwebglobal.vixhr.attendance.client.EmployeeClient;
 import com.microwebglobal.vixhr.attendance.dto.DataRequest;
 import com.microwebglobal.vixhr.attendance.dto.OvertimeClockRequest;
@@ -18,6 +19,7 @@ import java.time.LocalTime;
 @RequiredArgsConstructor
 public class EmployeeOvertimeService {
 
+    private final CompanyClient companyClient;
     private final EmployeeClient employeeClient;
     private final OvertimeClockEventRepository overtimeClockEventRepository;
     private final EmployeeOvertimeRepository employeeOvertimeRepository;
@@ -65,11 +67,24 @@ public class EmployeeOvertimeService {
     }
 
     public void clockIn(OvertimeClockRequest request) {
-        var response = employeeClient.getEmployeeById(request.getEmployeeId());
-        if (response == null || !response.userId().equals(request.getSubmittedBy())) {
-            assert response != null;
-            throw new RuntimeException("Invalid clock-in request for employee" + response.id());
+        var employeeResponse = employeeClient.getEmployeeById(request.getEmployeeId());
+        if (employeeResponse == null || !employeeResponse.userId().equals(request.getSubmittedBy())) {
+            assert employeeResponse != null;
+            throw new RuntimeException("Invalid clock-in request for employee" + employeeResponse.id());
         }
+
+//        var overtimePolicyResponse = companyClient.getOvertimePolicyByCompany(employeeResponse.companyId());
+//        if (overtimePolicyResponse == null) {
+//            throw new RuntimeException("Overtime policy not found");
+//        }
+//
+//        if (overtimePolicyResponse.getStartTime().isAfter(LocalTime.now())) {
+//            throw new RuntimeException("Cannot clock in before: " + overtimePolicyResponse.getStartTime());
+//        }
+//
+//        if (overtimePolicyResponse.getEndTime().isBefore(LocalTime.now())) {
+//            throw new RuntimeException("Cannot clock in after: " + overtimePolicyResponse.getEndTime());
+//        }
 
         var clockEvent = OvertimeClockEvent.builder()
                 .employeeId(request.getEmployeeId())
@@ -86,11 +101,20 @@ public class EmployeeOvertimeService {
     }
 
     public void clockOut(OvertimeClockRequest request) {
-        var response = employeeClient.getEmployeeById(request.getEmployeeId());
-        if (response == null || !response.userId().equals(request.getSubmittedBy())) {
-            assert response != null;
-            throw new RuntimeException("Invalid clock-out request for employee" + response.id());
+        var employeeResponse = employeeClient.getEmployeeById(request.getEmployeeId());
+        if (employeeResponse == null || !employeeResponse.userId().equals(request.getSubmittedBy())) {
+            assert employeeResponse != null;
+            throw new RuntimeException("Invalid clock-out request for employee" + employeeResponse.id());
         }
+
+//        var overtimePolicyResponse = companyClient.getOvertimePolicyByCompany(employeeResponse.companyId());
+//        if (overtimePolicyResponse == null) {
+//            throw new RuntimeException("Overtime policy not found");
+//        }
+//
+//        if (overtimePolicyResponse.getStartTime().isAfter(LocalTime.now())) {
+//            throw new RuntimeException("Invalid clock-out attempt");
+//        }
 
         var clockEvent = OvertimeClockEvent.builder()
                 .employeeId(request.getEmployeeId())

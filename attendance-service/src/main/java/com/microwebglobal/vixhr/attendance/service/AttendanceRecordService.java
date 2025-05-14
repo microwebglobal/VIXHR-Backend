@@ -1,5 +1,6 @@
 package com.microwebglobal.vixhr.attendance.service;
 
+import com.microwebglobal.vixhr.attendance.client.CompanyClient;
 import com.microwebglobal.vixhr.attendance.client.EmployeeClient;
 import com.microwebglobal.vixhr.attendance.dto.AttendanceRequest;
 import com.microwebglobal.vixhr.attendance.dto.DataRequest;
@@ -18,6 +19,7 @@ import java.time.LocalTime;
 @RequiredArgsConstructor
 public class AttendanceRecordService {
 
+    private final CompanyClient companyClient;
     private final EmployeeClient employeeClient;
     private final KafkaTemplate<String, AttendanceRecordedEvent> kafka;
     private final AttendanceRecordRepository attendanceRecordRepository;
@@ -62,6 +64,18 @@ public class AttendanceRecordService {
             throw new RuntimeException("Unauthorized clock-in attempt");
         }
 
+//        var companySettings = companyClient.getCompanySettingsByCompany(employeeResponse.companyId());
+//        if (companySettings == null) {
+//            throw new RuntimeException("Company settings not found");
+//        }
+//
+//        if (
+//                companySettings.getStandardWorkHoursStart().isAfter(LocalTime.now())
+//                || companySettings.getStandardWorkHoursEnd().isBefore(LocalTime.now())
+//        ) {
+//            throw new RuntimeException("Clock-in time is not yet reached");
+//        }
+
         var attendanceRecord = AttendanceRecord.builder()
                 .employeeId(request.getEmployeeId())
                 .companyId(employeeResponse.companyId())
@@ -86,6 +100,15 @@ public class AttendanceRecordService {
             assert employeeResponse != null;
             throw new RuntimeException("Unauthorized clock-out attempt");
         }
+
+//        var companySettings = companyClient.getCompanySettingsByCompany(employeeResponse.companyId());
+//        if (companySettings == null) {
+//            throw new RuntimeException("Company settings not found");
+//        }
+//
+//        if (companySettings.getStandardWorkHoursStart().isAfter(LocalTime.now())) {
+//            throw new RuntimeException("Clock-out time is not yet reached");
+//        }
 
         attendanceRecord.setCheckoutAddress(request.getAddress());
         attendanceRecord.setCheckoutDeviceId(request.getDeviceId());
