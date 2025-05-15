@@ -90,16 +90,21 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                "/api/users/register",
+                                "/actuator/**",
+                                "/images/**",
+                                "/error"
                         )
                         .permitAll()
-                        .requestMatchers("/api/users/register").permitAll()
-                        .requestMatchers("/actuator/**").permitAll()
                         .anyRequest()
                         .authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
-                .formLogin(withDefaults());
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .permitAll()
+                );
 
         return http.build();
     }

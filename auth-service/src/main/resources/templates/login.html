@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VixHR | Login</title>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+
+  <!-- Montserrat font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      background-color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.90rem;
+    }
+
+    ::placeholder {
+      font-size: 0.8rem;
+      color: #999;
+    }
+
+    .form-label,
+    .form-check-label,
+    input,
+    a,
+    small {
+      font-size: 0.9rem;
+    }
+
+    .btn-login {
+      height: 48px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+  </style>
+
+</head>
+
+<body>
+<div class="d-flex align-items-center justify-content-center min-vh-100 bg-white p-4">
+  <div class="w-100" style="max-width: 400px;">
+    <div class="text-center mb-4 d-flex justify-content-center align-items-center">
+      <img th:src="@{/images/logo.png}" alt="Company Logo" width="200" height="200" class="img-fluid" />
+    </div>
+
+    <form th:action="@{/login}" method="post">
+      <div class="mb-4">
+        <label for="username" class="form-label">Username</label>
+        <input
+                type="text"
+                id="username"
+                name="username"
+                class="form-control rounded-pill"
+                placeholder="Enter your username"
+                required
+        />
+      </div>
+
+      <div class="mb-4">
+        <label for="password" class="form-label">Password</label>
+        <input
+                type="password"
+                id="password"
+                name="password"
+                class="form-control rounded-pill"
+                placeholder="Enter your password"
+                required
+        />
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="form-check">
+          <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="rememberMe"
+          />
+          <label class="form-check-label" for="rememberMe">Remember Me</label>
+        </div>
+        <a href="/forgot-password" class="text-decoration-none text-dark fw-bold">Forgot Password?</a>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 rounded-pill btn-login">Log in</button>
+    </form>
+
+    <div class="text-center mt-3">
+      <small class="text-muted">
+        Don’t have an account?
+        <a href="/register" class="fw-bold text-decoration-none text-dark">Register</a>
+      </small>
+    </div>
+  </div>
+</div>
+</body>
+</html>

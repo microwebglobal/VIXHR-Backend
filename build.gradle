@@ -84,6 +84,7 @@ project(':auth-service') {
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
         implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
         implementation 'org.springframework.session:spring-session-jdbc'
+        implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
         runtimeOnly 'org.postgresql:postgresql'
         implementation("org.flywaydb:flyway-database-postgresql")
         implementation project(':common')
