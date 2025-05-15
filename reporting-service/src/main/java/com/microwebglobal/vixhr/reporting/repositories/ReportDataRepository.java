@@ -15,11 +15,16 @@ public interface ReportDataRepository extends JpaRepository<ReportDataRecord, Lo
 
     Page<ReportDataRecord> findAllByEmployeeIdAndDateBetween(Long employeeId, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
-    List<ReportDataRecord> findAllByEmployeeIdAndDateBetween(Long employeeId, LocalDate dateAfter, LocalDate dateBefore);
+    List<ReportDataRecord> findAllByEmployeeIdAndDateBetweenAndStatusNot(
+            Long employeeId, LocalDate dateAfter, LocalDate dateBefore, String status);
 
-    List<ReportDataRecord> findAllByCompanyIdAndDateBetween(Long companyId, LocalDate dateAfter, LocalDate dateBefore);
+    List<ReportDataRecord> findAllByCompanyIdAndDateBetweenAndStatusNot(
+            Long companyId, LocalDate dateAfter, LocalDate dateBefore, String status);
+
 
     Optional<ReportDataRecord> findByEmployeeIdAndDate(Long employeeId, LocalDate date);
+
+    List<ReportDataRecord> findAllByCompanyId(Long companyId);
 
     void deleteAllByEmployeeId(Long employeeId);
 

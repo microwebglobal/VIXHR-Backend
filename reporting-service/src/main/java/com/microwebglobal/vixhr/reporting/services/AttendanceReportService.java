@@ -39,11 +39,21 @@ public class AttendanceReportService {
     }
 
     public List<ReportDataRecord> getAllByCompanyId(Long companyId, LocalDate startDate, LocalDate endDate) {
-        return reportDataRepository.findAllByCompanyIdAndDateBetween(companyId, startDate, endDate);
+        return reportDataRepository.findAllByCompanyIdAndDateBetweenAndStatusNot(
+                companyId,
+                startDate,
+                endDate,
+                "DELETED_EMPLOYEE"
+        );
     }
 
     public List<ReportDataRecord> getAllByEmployeeId(Long employeeId, LocalDate startDate, LocalDate endDate) {
-        return reportDataRepository.findAllByEmployeeIdAndDateBetween(employeeId, startDate, endDate);
+        return reportDataRepository.findAllByEmployeeIdAndDateBetweenAndStatusNot(
+                employeeId,
+                startDate,
+                endDate,
+                "DELETED_EMPLOYEE"
+        );
     }
 
     public void deleteAllByEmployeeId(Long employeeId) {
