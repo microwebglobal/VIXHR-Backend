@@ -3,6 +3,27 @@ spring:
     url: jdbc:postgresql://postgres:5432/vixhr_auth
     username: ${DOCKER_DB_USERNAME:vixhruser}
     password: ${DOCKER_DB_PASSWORD:vixhrpassword}
+  security:
+    oauth2:
+      authorizationserver:
+        client:
+          react-client:
+            registration:
+              client-id: "react-client"
+              client-authentication-methods:
+                - "none"
+              authorization-grant-types:
+                - "authorization_code"
+                - "refresh_token"
+              redirect-uris:
+                - "http://localhost:3000/auth/callback"
+              post-logout-redirect-uris:
+                - "http://localhost:3000"
+              scopes:
+                - "openid"
+                - "profile"
+            require-authorization-consent: false
+            require-proof-key: true
 
 eureka:
   client:

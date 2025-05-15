@@ -22,6 +22,38 @@ spring:
   session:
     jdbc:
       initialize-schema: always
+  security:
+    oauth2:
+      authorizationserver:
+        client:
+          react-client:
+            registration:
+              client-id: "react-client"
+              client-authentication-methods:
+                - "none"
+              authorization-grant-types:
+                - "authorization_code"
+                - "refresh_token"
+              redirect-uris:
+                - "http://localhost:3000/auth/callback"
+              post-logout-redirect-uris:
+                - "http://localhost:3000"
+              scopes:
+                - "openid"
+                - "profile"
+            require-authorization-consent: false
+            require-proof-key: true
+          test-client:
+            registration:
+              client-id: "test-client"
+              client-secret: "$2a$10$YWxUGpIPGOz/9E5yVaB.pu/lMqqWgKHPMGhSXyAcwnvsqfxeyC0RC"
+              client-authentication-methods:
+                - "client_secret_basic"
+              authorization-grant-types:
+                - "client_credentials"
+              scopes:
+                - "openid"
+                - "profile"
 
 eureka:
   client:

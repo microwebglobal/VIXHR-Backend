@@ -17,20 +17,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.core.oidc.OidcScopes;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
+import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcUserInfoAuthenticationContext;
+import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcUserInfoAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -45,6 +42,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -61,8 +59,12 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-                .oidc(withDefaults());	// Enable OpenID Connect 1.0
+        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class) // Enable OpenID Connect 1.0
+                .oidc((oidc) -> oidc
+                        .userInfoEndpoint((userInfo) -> userInfo
+                                .userInfoMapper(userInfoMapper)
+                        )
+                );
 
         http
                 .cors(withDefaults())
@@ -107,37 +109,6 @@ public class SecurityConfig {
                 );
 
         return http.build();
-    }
-
-    // Register clients
-    @Bean
-    public RegisteredClientRepository registeredClientRepository() {
-        RegisteredClient spaClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("react-client")
-                .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("http://localhost:3000/auth/callback")
-                .postLogoutRedirectUri("http://localhost:3000/")
-                .scope(OidcScopes.OPENID)
-                .scope(OidcScopes.PROFILE)
-                .clientSettings(ClientSettings.builder()
-                        .requireAuthorizationConsent(false)
-                        .requireProofKey(true)
-                        .build())
-                .build();
-
-        // For testing purposes only REMOVE IN PRODUCTION!!!
-        RegisteredClient testClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("test-client")
-                .clientSecret(passwordEncoder().encode("secret"))
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .scope(OidcScopes.OPENID)
-                .scope(OidcScopes.PROFILE)
-                .build();
-
-        return new InMemoryRegisteredClientRepository(spaClient, testClient);
     }
 
     @Bean
@@ -190,7 +161,8 @@ public class SecurityConfig {
     @Bean
     OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer() {
         return context -> {
-            if (context.getTokenType() == OAuth2TokenType.ACCESS_TOKEN) {
+            // Add role to Access Token
+            if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
                 Authentication principal = context.getPrincipal();
 
                 if (!principal.getAuthorities().isEmpty()) {
@@ -201,6 +173,7 @@ public class SecurityConfig {
                     context.getClaims().claim("roles", authorities);
                 }
 
+                // Add userId to token
                 Object principalObj = principal.getPrincipal();
                 if (principalObj instanceof CustomUserDetails customUserDetails) {
                     context.getClaims().claim("userId", customUserDetails.getId());
@@ -208,6 +181,14 @@ public class SecurityConfig {
             }
         };
     }
+
+    // Custom UserInfo Mapper
+    Function<OidcUserInfoAuthenticationContext, OidcUserInfo> userInfoMapper = (context) -> {
+        OidcUserInfoAuthenticationToken authentication = context.getAuthentication();
+        JwtAuthenticationToken principal = (JwtAuthenticationToken) authentication.getPrincipal();
+
+        return new OidcUserInfo(principal.getToken().getClaims());
+    };
 
     // Cors Configuration
     @Bean
