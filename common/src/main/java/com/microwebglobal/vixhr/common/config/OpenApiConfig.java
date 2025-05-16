@@ -7,8 +7,17 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.OAuthFlow;
 import io.swagger.v3.oas.annotations.security.OAuthFlows;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.servers.Server;
 
-@OpenAPIDefinition(info = @Info(title = "API"))
+@OpenAPIDefinition(
+        info = @Info(
+                title = "${openapi.service.title}",
+                version = "${openapi.service.version}"
+        ),
+        servers = {
+            @Server(url = "${openapi.service.url}")
+        }
+)
 @SecurityScheme(
         name = "oauth",
         type = SecuritySchemeType.OAUTH2,

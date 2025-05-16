@@ -25,7 +25,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8081
+          issuer-uri: http://localhost:8080
 
 eureka:
   client:
@@ -42,10 +42,14 @@ eureka:
 springdoc:
   api-docs:
     enabled: true
+    path: /attendance/v3/api-docs
   swagger-ui:
-    enabled: true
-    oauth:
-      client-id: test-client
-      client-secret: secret
+    enabled: false
   oAuthFlow:
-    tokenUrl: http://localhost:8081/oauth2/token
+    tokenUrl: http://localhost:8080/oauth2/token
+
+openapi:
+  service:
+    title: ${spring.application.name}
+    version: 1.0.0
+    url: http://localhost:${server.port}

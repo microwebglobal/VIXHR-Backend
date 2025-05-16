@@ -1,5 +1,6 @@
 server:
   port: 8080
+  forward-headers-strategy: framework
 
 spring:
   main:
@@ -12,12 +13,19 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: "http://localhost:3000"
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true
       routes:
         # Auth Service Routes
         - id: auth-service
           uri: lb://auth-service
           predicates:
-            - Path=/api/users/**, /oauth2/**, /login/**
+            - Path=/api/users/**, /oauth2/**, /login/**, /.well-known/**, /userinfo, /connect/**, /auth/v3/api-docs/**
           filters:
             - PreserveHostHeader
 
@@ -25,55 +33,42 @@ spring:
         - id: employee-service
           uri: lb://employee-service
           predicates:
-            - Path=/api/employees/**
+            - Path=/api/employees/**, /employee/v3/api-docs/**
 
         # Company Service Routes
         - id: company-service
           uri: lb://company-service
           predicates:
-            - Path=/api/companies/**
+            - Path=/api/companies/**, /company/v3/api-docs/**
 
         # Attendance Service Routes
         - id: attendance-service
           uri: lb://attendance-service
           predicates:
-            - Path=/api/attendance/**
+            - Path=/api/attendance/**, /attendance/v3/api-docs/**
 
         # Payroll Service Routes
         - id: payroll-service
           uri: lb://payroll-service
           predicates:
-            - Path=/api/payroll/**
+            - Path=/api/payroll/**, /payroll/v3/api-docs/**
 
         # Notification Service Routes
         - id: notification-service
           uri: lb://notification-service
           predicates:
-            - Path=/api/notifications/**
+            - Path=/api/notifications/**, /notification/v3/api-docs/**
 
         # Reporting Service Routes
         - id: reporting-service
           uri: lb://reporting-service
           predicates:
-            - Path=/api/reports/**
+            - Path=/api/reports/**, /reporting/v3/api-docs/**
 
         - id: actuator-routes
           uri: lb://api-gateway
           predicates:
             - Path=/actuator/**
-
-#        # OpenAPI Routes (Development Only)
-#        - id: employee-service-openapi-route
-#          uri: http://localhost:8082
-#          predicates:
-#            - Path=/employee/v3/api-docs
-#            - Method=GET
-#
-#        - id: auth-service-openapi-route
-#          uri: http://localhost:8081
-#          predicates:
-#            - Path=/auth/v3/api-docs
-#            - Method=GET
 
 eureka:
   client:
@@ -87,15 +82,23 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
     lease-renewal-interval-in-seconds: 30
 
-#springdoc:
-#  api-docs:
-#    enabled: true
-#  swagger-ui:
-#    enabled: true
-#    path: /swagger-ui.html
-#    config-url: /v3/api-docs/swagger-config
-#    urls:
-#      - name: employee-service
-#        url: /employee/v3/api-docs
-#      - name: auth-service
-#        url: /auth/v3/api-docs
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - name: employee-service
+        url: /employee/v3/api-docs
+      - name: auth-service
+        url: /auth/v3/api-docs
+      - name: attendance-service
+        url: /attendance/v3/api-docs
+      - name: company-service
+        url: /company/v3/api-docs
+      - name: reporting-service
+        url: /reporting/v3/api-docs
+    oAuthFlow:
+      tokenUrl: http://localhost:8080/oauth2/token

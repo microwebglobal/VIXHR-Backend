@@ -90,13 +90,12 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
+                                "/auth/v3/api-docs/**",
                                 "/api/users/register",
                                 "/actuator/**",
                                 "/images/**",
-                                "/error"
+                                "/error",
+                                "/login"
                         )
                         .permitAll()
                         .anyRequest()
@@ -105,7 +104,6 @@ public class SecurityConfig {
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .permitAll()
                 );
 
         return http.build();
@@ -148,7 +146,7 @@ public class SecurityConfig {
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
-                .issuer("http://localhost:8081")
+//                .issuer("http://localhost:8081")
                 .build();
     }
 
